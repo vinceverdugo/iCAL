@@ -1,6 +1,6 @@
 ##############################################################
 ######################## Chapter 6 ###########################
-### Coordinates, Vectors, and Modeling a Curve  ##############
+######### Coordinates, Vectors, and Modeling a Curve #########
 ##############################################################
 # By Samuel S.P. Shen
 # Distinguished Professor of Mathematics and Statistics
