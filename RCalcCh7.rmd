@@ -1,0 +1,754 @@
+##############################################################
+######################## Chapter 7 ###########################
+###########     Partial derivatives                 ##########
+##############################################################
+# By Samuel S.P. Shen
+# Distinguished Professor of Mathematics and Statistics
+# San Diego State University
+# https://shen.sdsu.edu
+# Email:sshen@sdsu.edu
+# Version 1.0 developed from May 2021 for Cal III
+
+#
+#
+# R symbolic calculation of partial derivatives
+z = expression(3 - x^2 - 2*y^2, 'x', 'y')
+D(z, 'x')
+#-(2 * x)
+D(z, 'y')
+#-(2 * (2 * y))
+
+###
+
+sin(1/2)*cos(1/2)*(sqrt(3)/2 + 1/2)
+#[1] 0.5747354 This is the slope for Ex 7.1
+
+cos(1/2)*sin(1/2)
+#[1] 0.4207355 This is x-direction =al slope
+
+x = 1/2
+y = 1/2
+sin(x)*cos(y)#partial z/parial y
+#[1] 0.4207355
+
+#gradient directional slope
+x = 1/2
+y = 1/2
+sqrt((cos(x)*sin(y))^2  + (sin(x)*cos(y))^2)
+#[1] 0.5950098 
+
+#What direction is the gradient, the steepest
+#cos(x)*sin(y)*cos(theta) + sin(x)*cos(y)*sin(theta) = 0.5950098
+
+cos(x)*sin(y)
+# 0.4207355
+sin(x)*cos(y)
+#0.4207355
+
+0.4207355*cos(theta) + 0.4207355*sin(theta) = 0.5950098
+#
+
+#R plot Fig. 7.2: Surface and contours of z = f(x, y)
+#Fig. 7.2 (a): A surface
+#install.packages('plotly')
+library(plotly)
+par(mar = c(0,0,0,0.0))
+x =y= seq(-1,1, len=51)
+z = outer(x, y, function(x,y){3 - x^2 - 2*y^2})
+p <- plot_ly(x = ~x, y = ~y, z = ~ z, 
+             type = 'surface')
+#p
+hide_colorbar(p)
+#Fig. 7.2 (a): Contours
+par(mar = c(4.5,4.5,2,0.5))
+filled.contour(x,y,z,  nlevels = 20,
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               plot.title=title("Color map and contour levels", 
+                                xlab="x", ylab="y", cex.lab=1.2),
+               plot.axes = {axis(1, cex.axis = 1.1); 
+                 axis(2, cex.axis = 1.1); 
+                 contour(x, y, z, levels = c(2.9, 2,2.5, 1.5),
+                         labels = c('2.9', '2', '2.5', '1.5'), 
+                         col = "black", add = TRUE)})
+
+
+#
+#
+#R solution of a nonlinear equation: uniroot()
+ft = function(t){cos(t) + 2*sin(t) + 0.06}
+uniroot(ft, c(-3, 0))
+#-0.4904837
+-0.4904846*180/pi
+#-28.1027 degrees
+cos(-0.4904837)
+#[1] 0.8821051
+sin(-0.4904837)
+#[1] -0.4710526
+
+uniroot(ft, c(0, 3))
+#2.704781
+2.704781*180/pi
+#154.9725 degrees
+cos(2.704781)
+#[1] -0.9061051
+sin(2.704781)
+#[1] 0.4230526
+
+ft = function(t){cos(t) + 2*sin(t) - 0.06}
+uniroot(ft, c(-3, 0))
+#-0.4368115
+-0.4368115*180/pi
+#-25.02746 degrees
+cos(-0.4368115)
+#[1] 0.9061052
+sin(-0.4368115)
+#[1] -0.4230525
+
+uniroot(ft, c(0, 3))
+#2.651108
+2.651108*180/pi
+#151.8973 degrees
+cos(2.651108)
+#[1] -0.8821047
+sin(2.651108)
+#[1] 0.4710535
+
+#graphic solutions of an nonlinear equation
+g=function(t) cos(t) + 2*sin(t)
+t = seq(-pi, pi, len=301)
+y1 = rep(-0.06, length(t))
+y2 = rep(0.06, length(t))
+plot(t, g(t), type = 'l')
+lines(t, y1, type = 'l', col = 'red')
+lines(t, y2, type = 'l', col = 'red')
+
+
+grd = cos(1/2)*sin(1/2)*c(1,1)
+#(0.4207355 0.4207355)
+sqrt(grd[1]^2 + grd[2]^2)
+#[1] 0.5950098
+
+cos(1/2)*sin(1/2)*(sqrt(3)/2 + 1/2)
+#[1] 0.5747354
+
+#R solution of a nonlinear equation: uniroot()
+par(mar=c(4, 4, 2, 1))
+ft = function(t){cos(t) + 2*sin(t) + 0.06}
+ft
+t = seq(-1, 0, len =100)
+plot(t, ft(t), type = 'l')
+zeroy = rep(0, 100)
+lines(t, zeroy, col='red')
+uniroot(ft, c(-1, 0))
+#-0.4904837
+-0.4904846*180/pi
+#-28.1027 degrees
+cos(-0.4904837)
+#[1] 0.8821051
+sin(-0.4904837)
+#[1] -0.4710526
+
+#n = (0.8821051, -0.4710526)
+
+uniroot(ft, c(0, 3))
+#2.704781
+2.704781*180/pi
+#154.9725 degrees
+cos(2.704781)
+#[1] -0.9061051
+sin(2.704781)
+#[1] 0.4230526
+
+ft = function(t){cos(t) + 2*sin(t) - 0.06}
+uniroot(ft, c(-3, 0))
+#-0.4368115
+-0.4368115*180/pi
+#-25.02746 degrees
+cos(-0.4368115)
+#[1] 0.9061052
+sin(-0.4368115)
+#[1] -0.4230525
+
+uniroot(ft, c(0, 3))
+#2.651108
+2.651108*180/pi
+#151.8973 degrees
+cos(2.651108)
+#[1] -0.8821047
+sin(2.651108)
+#[1] 0.4710535
+
+#graphic solution of an nonlinear equation
+g=function(t) cos(t) + 2*sin(t)
+t = seq(-pi, pi, len=301)
+y1 = rep(-0.06, length(t))
+y2 = rep(0.06, length(t))
+plot(t, g(t), type = 'l')
+lines(t, y1, type = 'l', col = 'blue')
+lines(t, y2, type = 'l', col = 'red')
+
+#solve x^2 = 1
+h=function(x) x^2
+x = seq(-2, 2, len=101)
+y1 = rep(1, length(x))
+plot(x, h(x), type = 'l')
+lines(x, y1, type = 'l', col = 'blue')
+
+h=function(x) x^3 - 2*x^2 +1
+x = seq(-0.3, 2, len=101)
+y1 = rep(1, length(x))
+plot(x, h(x), type = 'l')
+lines(x, y1, type = 'l', col = 'blue')
+#
+#
+# R plot Fig. 7.3: Contours and directions
+x = y = seq(-1, 1, len=51)
+#x = seq(-1, 1, len=51)
+#y = seq(-1, 1, len=51)
+z = outer(x, y, function(x,y){3- x^2 - 2*y^2})
+par(mar = c(4.3,4.2,2,0.2))
+filled.contour(x, y, z,  nlevels = 30,
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               plot.title=title("Dorm surface and path directions", 
+                                xlab="x", ylab="y", cex.lab=1.2),
+               plot.axes = {
+                 axis(1, cex.axis = 1.1); 
+                 axis(2, cex.axis = 1.1); 
+                 contour(x, y, z, levels = c(2.9, 2,2.5, 1.5),
+                         labels = c('2.9', '2', '2.5', '1.5'),
+                         col = "black", add = TRUE);
+                 arrows(c(0.5, 0.5), c(0.5, 0.5), 
+                        c(0.5 + 0.8821*0.3, 0.5 - 0.90611*0.3), 
+                        c(0.5 -0.4711*0.3, 0.5 + 0.4231*0.3),
+                        lwd=2, length = 0.2, angle =20,
+                        col = c(3, 1)); 
+                 text(0.5 + 0.8821*0.3 + 0.07, 0.5 - 0.4712*0.3 -0.05,  
+                      expression(bold(n)[1]), cex = 1.5, col = 'green');
+                 text(0.5 - 0.90611*0.3 - 0.1, 0.5 + 0.4231*0.3 + 0.03,  
+                      expression(bold(n)[2]), cex = 1.5);
+                 points(0.5, 0.5, pch =16, cex= 1.2)
+               })
+
+#3D plot for the above filled contours
+x = y = seq(-1, 1, len=51)
+z = outer(x, y, function(x,y){3- x^2 - 2*y^2})
+p <- plot_ly(x = ~x, y = ~y, z = ~ z, 
+             type = 'surface')
+#p
+hide_colorbar(p)
+
+#Add two more directions n3 and n4
+#for a total of four directions
+filled.contour(x, y, z,  nlevels = 30,
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               plot.title=title("Dorm surface and path directions", 
+                                xlab="x", ylab="y", cex.lab=1.2),
+               plot.axes = {
+                 axis(1, cex.axis = 1.1); 
+                 axis(2, cex.axis = 1.1); 
+                 contour(x, y, z, levels = c(2.9, 2,2.5, 1.5),
+                         labels = c('2.9', '2', '2.5', '1.5'),
+                         col = "black", add = TRUE);
+                 arrows(c(0.5, 0.5, 0.5, 0.5), 
+                        c(0.5, 0.5, 0.5, 0.5), 
+                        c(0.5 + 0.8821*0.3, 
+                          0.5 - 0.90611*0.3,
+                          0.5 + 0.9061*0.3, 
+                          0.5 - 0.8821*0.3), 
+                        c(0.5 -0.4711*0.3, 
+                          0.5 + 0.4231*0.3,
+                          0.5 - 0.4231*0.3,
+                          0.5 + 0.4711*0.3),
+                        lwd=0.6, length = 0.1, angle =8,
+                        col = c(2, 1, 3, 4)); 
+                 text(0.5 + 0.8821*0.3/1.5 , 0.5 - 0.4712*0.3,  
+                      expression(bold(n)[1]), cex = 1.5, col = 'brown');
+                 text(0.5 - 0.90611*0.3/1.3, 0.5 + 0.4231*0.3 -0.07,  
+                      expression(bold(n)[2]), cex = 1.5);
+                 text(0.5 + 0.8821*0.3/1.3 , 0.5 - 0.4712*0.3+0.10,  
+                      expression(bold(n)[3]), cex = 1.5, col = 'green');
+                 text(0.5 - 0.90611*0.3/1.5, 0.5 + 0.4231*0.3 -0.13+0.15,  
+                      expression(bold(n)[4]), cex = 1.5, col = 'blue');
+                 points(0.5, 0.5, pch =16, cex= 1.2)
+               })
+
+
+
+#R plot Fig. 7.4: Traveling wave w = f(x - ct)
+#Fig. 7.4(a): A surface
+library(plotly)
+par(mar = c(0,0,0,0.0))
+x = seq(0, 20, len=201)
+t = seq(0, 2, len= 101)
+t = seq(0, 2, len= 101)
+w = outer(x, t, function(x,t) {0.3*sin(x -10*t)})
+p <- plot_ly(x = ~x, y = ~t, z = ~ w, 
+             type = 'surface')
+hide_colorbar(p)
+#Fig. 7.4(b): Contours
+x = seq(0, 20, len=201)
+t = seq(0, 2, len= 101)
+w = outer(x, t, function(x,t) {0.3*sin(x -10*t)})
+plot_ly(x = ~x, y = ~t, z = ~ w, 
+        type = 'contour')
+
+
+#Standing wave
+x = seq(-9,9, len=301)
+t = 1
+t= 0.5
+y = sin(t)*sin(x)
+plot(x, y, type = 'l')
+
+# R plot Fig. 7.5: Heat diffusion
+#Fig. 7.5(a): Copper: Large D and fast diffusion
+par(mar = c(4.5,4.5,2,0.5))
+D = 111
+x = seq(-8,8, len = 401)
+t = seq(0.01, 1, len = 200)
+Temp = function(x,t){500*(D*t)^(-1/2)*exp(-x^2/(4*D*t))}
+T = outer(x, t, Temp)
+filled.contour(x, t, T,  nlevels = 20,
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+         plot.title=title("Heat diffusion T(x,t): D = 111.00", 
+                                xlab="x", ylab="t", cex.lab=1.5),
+               plot.axes = {axis(1, cex.axis = 1.5); 
+                 axis(2, cex.axis = 1.5) },
+               key.title = {title(main="T")},
+               key.axes = axis(4, seq(0, 500, by = 100), 
+                               cex.axis = 1.5)
+)
+
+t = 0.2
+plot(x, Temp(x, t), type ='l', ylim = c(0, 120))
+text(0, 105, "time t = 0.2")
+
+t = 0.3
+lines(x, Temp(x, t), type ='l', ylim = c(0, 120), col = 'green')
+text(0, 90, "t = 0.3", col = 'green')
+
+t = 0.5
+lines(x, Temp(x, t), type ='l', ylim = c(0, 120),
+      col = 'red')
+text(0, 60, "t = 0.5", col = 'red')
+
+t = 1.0
+lines(x, Temp(x, t), type ='l', ylim = c(0, 120),
+      col = 'blue')
+
+ # Plot Fig. 7.5(b): Steel: Small D and slow diffusion
+par(mar = c(4.5,4.5,2,0.5))
+D = 11.72
+x = seq(-8,8, len = 401)
+t = seq(0.01, 1, len = 200)
+Temp = function(x,t){500*(D*t)^(-1/2)*exp(-x^2/(4*D*t))}
+T = outer(x, t, Temp)
+filled.contour(x, t, T,  nlevels = 20,
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+        plot.title=title("Heat diffusion T(x,t): D = 11.72", 
+                                xlab="x", ylab="t", cex.lab=1.5),
+               plot.axes = {axis(1, cex.axis = 1.5); 
+                 axis(2, cex.axis = 1.5) },
+               key.title = {title(main="T")},
+               key.axes = axis(4, seq(0, 1500, by = 500), 
+                               cex.axis = 1.5)
+)
+
+#Spatial distribution of temp for a given time
+t1 = 0.1
+D = 20
+x = seq(-8,8, len = 401)
+T1 = function(x){500*(D*t1)^(-1/2)*exp(-x^2/(4*D*t1))}
+plot(x, T1(x), type = 'l')
+
+t1 = 0.2
+D = 20
+x = seq(-8,8, len = 401)
+T1 = function(x){500*(D*t1)^(-1/2)*exp(-x^2/(4*D*t1))}
+lines(x, T1(x), type = 'l')
+
+t1 = 0.5
+D = 20
+x = seq(-8,8, len = 401)
+T1 = function(x){500*(D*t1)^(-1/2)*exp(-x^2/(4*D*t1))}
+lines(x, T1(x), type = 'l', col = 'red')
+
+#Earth's gravitational acceleration
+G = 6.67430*10^(-11) #Units: m^3/(kg*sec)
+M = 5.972*10^(24) #mass of earth in kg
+r = 6371*10^3 #radius of earth in meters
+potential = G*M/r
+potential 
+#1] 62563051 #Units m^3/(kg*sec) * kg /m = m^2/s^2 
+# = (m/s)^2 velocity square
+# GMm/r = m(GM/r) = mv^2 kinetic energy
+# GMm/r^2 is the gravitational force 
+# Forve/mass = acceleation: 
+# (GMm/r^2)/m = G*M/r^2 is the gravitational acceleration
+-G*M/r^2
+#[1] -9.819973 #units (m/s^2)
+
+#gravitational force on a human body
+G = 6.67430*10^(-11)
+M = 5.972*10^(24) #mass of earth in kg
+r = 6371*10^3 #radius of earth in meters
+m = 70 #kg
+-G*M*m/r^2
+ #[1] -687.3981 [newton] i.e. (m/s^2) kg
+
+G = 6.67430*10^(-11)
+M = 70  #your mass in kg
+m = 40 #your brother mass in kg
+r = 1 #1 meter away
+-G*M*m/r^2
+#[1] -1.868804e-07 [Newton], i.e. (m/s^2) kg
+
+#Gravitational force on an inch of hair 
+w = 0.00064 #[ounces]
+wkg = 0.00064 * 28.34/1000 #ounces to kg
+wkg
+#[1] 1.81376e-05 [kg]
+hair_gravity_force = wkg * 9.8
+hair_gravity_force
+#[1] 0.0001777485 [Newton]
+#1.8X10^(-4) Newton
+#1,000 times more than the force 
+#between two human bodies
+
+#Potential energy: U = mgh when h =2
+#Derivation
+G = 6.67430*10^(-11) #Units: m^3/(kg*sec)
+M = 5.972*10^(24) #mass of earth in kg
+r = 6371*10^3 #radius of earth in meters
+m = 1 #kg. This is the mass of a object whose 
+#potential energy is to be computed. Notation 
+#m0 may be used here to make a difference from unit m: meter. 
+h = 2 #meters. This is a height of the object of mass m0
+p1 = -G*M*m/(r + h) ##Units m^3/(kg*sec) * kg /m = m^2/s^2 
+#potential energy at height h from Earth's surface
+#with respect to the center of Earth
+p0 = -G*M*m/(r + 0) #potential at the Earth's surface: h =0
+p1
+#[1] -62563031
+p0
+#[1] -62563051
+Dp =p1 - p0 #potential energy as the difference of potentials
+Dp #difference of the potential w.r.t. to the Earth center
+#[1] 19.63994 #
+g = 9.8 #m/s^2
+Ep = m*g*h #potential energy computed from Ep = m0 gh
+Ep
+#or Ep = mgh when we use m to replace m0
+#[1] 19.6
+#The math approximation is based on the formula:
+# (-1/(r+h))- (-1/r) approximately equal h/r^2
+#Thus GMm[(-1/(r+h))- (-1/r)] \approx GMmh/r^2
+# =(GM/r^2) mh = g  mh = mgh
+#because G*M/r^2 = 9.8 meter/s^2
+Ep/Dp  #mgh potential energy divided by the potential diff
+#[1] 0.997966
+
+#Potential energy: U = mgh when h = 200000 meters
+#Derivation
+G = 6.67430*10^(-11) #Units: m^3/(kg*sec)
+M = 5.972*10^(24) #mass of earth in kg
+r = 6371*10^3 #radius of earth in meters
+m = 1 #kg. This is the mass of a object whose 
+#potential energy is to be computed. Notation 
+#m0 may be used here to make a difference from unit m: meter. 
+h = 200000 #meters. This is a height of the object of mass m0
+p1 = -G*M*m/(r + h) ##Units m^3/(kg*sec) * kg /m = m^2/s^2 
+#potential energy at height h from Earth's surface
+#with respect to the center of Earth
+p0 = -G*M*m/(r + 0) #potential at the Earth's surface: h =0
+p1
+#[1] -62563031
+p0
+#[1] -62563051
+Dp =p1 - p0 #potential energy as the difference of potentials
+Dp #difference of the potential w.r.t. to the Earth center
+#[1] 19.63994 #
+g = 9.8 #m/s^2
+Ep = m*g*h #potential energy computed from Ep = m0 gh
+Ep
+#or Ep = mgh when we use m to replace m0
+#[1] 19.6
+#The math approximation is based on the formula:
+# (-1/(r+h))- (-1/r) approximately equal h/r^2
+#Thus GMm[(-1/(r+h))- (-1/r)] \approx GMmh/r^2
+# =(GM/r^2) mh = g  mh = mgh
+#because G*M/r^2 = 9.8 meter/s^2
+Ep/Dp  #mgh potential energy divided by the potential diff
+#[1] 1.029294  #about 3% over estimation
+100*(Ep - Dp)/Dp #%
+#[1] 2.929444% percentage error for h = 200 km
+#If h = 2000 km, the error is about 31%. 
+
+
+t = seq(0, 2*pi, len = 101)
+x = cos(t)
+y = sin(t)
+x
+plot(x,y, type = 'l', 
+     xlim = c(-1.5, 1.5), 
+     ylim = c(-1.5, 1.5))
+points(-1/sqrt(5), -2/sqrt(5), pch = 16,
+       cex = 2, col ='red')
+arrows(0,0, -1/sqrt(5), -2/sqrt(5))
+
+#Vector field, source and sink
+f <- function(x, y) x^2 + y^2
+xx <- c(-1, 1); yy <- c(-1, 1)
+#install.packages('pracma')
+library(pracma)
+vectorfield(f, xx, yy, scale = 0.1)
+for (xs in seq(-1, 1, by = 0.25)) {
+  sol <- rk4(f, -1, 1, xs, 100)
+  lines(sol$x, sol$y, col="darkgreen")
+}
+
+#
+#
+#R plot Fig. 7.8(a): Source 
+m=5
+n=20
+r = c(0.2, 0.4, 0.8, 1.5)
+x=y=xa=ya=th= 1:n
+plot(0,  xlim = c(-3,3), ylim = c(-3, 3),
+     type ='n', xlab = 'x', ylab = 'y',
+     cex.lab =1.5, cex.axis=1.5)
+for(j in 1:m){
+  for(i in 1:n){th[i]= i*2*pi/n + (j-1)*pi/n
+  x[i] = r[j]*cos(th[i])
+  y[i] = r[j]*sin(th[i])
+  xa[i] = x[i] + x[i]
+  ya[i] = y[i] + y[i]
+  }
+  arrows(x,y,xa,ya, angle=30, length=0.1)
+}
+
+#Plot a vector for a spot/position
+x = 1.5
+y = 0.5
+ux = x
+uy = y
+xa = x + ux
+ya = y + uy
+arrows(x,y,xa,ya, angle=30, length=0.1, col = 'red')
+
+#R plot Fig. 7.8(b): Sink
+m=4
+n=20
+r = c(0.4, 0.9, 1.6, 3.0)
+x=y=xa=ya=th= 1:n
+plot(0,  xlim = c(-3,3), ylim = c(-3, 3),
+     type ='n', xlab = 'x', ylab = 'y',
+     cex.lab =1.5, cex.axis=1.5)
+for(j in 1:m){
+  for(i in 1:n){th[i]= i*2*pi/n + (j-1)*pi/n
+  x[i] = r[j]*cos(th[i])
+  y[i] = r[j]*sin(th[i])
+  xa[i] = x[i] - x[i]/2
+  ya[i] = y[i] - y[i]/2
+  }
+  arrows(x,y,xa,ya, angle=10, length=0.1)
+}
+
+x = 2.8
+y = -2.5
+ux = -0.5*x
+uy = -0.5*y
+xa = x + ux
+ya = y + uy
+arrows(x,y,xa,ya, angle=30, length=0.1, col = 'red')
+#
+#
+#R plot Fig. 7.8c. \ref{fig0708c}
+#(a)
+par(mar=c(0,0,0,0), bg = "black")
+R1 = 4 
+R = 3
+theta = seq(0, 2*pi, len = 1001)
+xR = R*cos(theta)
+yR = R*sin(theta)
+plot(xR, yR, type = 'l', col = 'red',
+     xlim = c(-5,5), ylim = c(-5,5),
+     ylab = "", xlab="", xaxt='n', yaxt='n',
+     bty = 'n'
+     )
+xE = R1*cos(theta)
+yE = R1*sin(theta)
+lines(xE, yE, lty = 2, col = 'white')
+atheta = seq(0, 2*pi, len = 16)
+xA = R1*cos(atheta)
+yA = R1*sin(atheta)
+install.packages('shape')
+library(shape)
+arrows(xA,yA,1.2*xA,1.2*yA, 
+       lwd = 6, col = 'yellow',
+       angle=15, length=0.1, arr.type="triangle")
+arrows(0,0, R*cos(pi/2.5), R*sin(pi/2.5),
+       lwd = 1, col = 'white',
+       angle=10, length=0.1)
+arrows(0,0, R1*cos(pi/6), R1*sin(pi/6),
+       lwd = 1, col = 'white',
+       angle=10, length=0.1)
+text(0.5*R*cos(pi/2.5)-0.2, 0.5*R*sin(pi/2.5) + 0.5, 
+     'R', cex = 1.3, col = 'white')
+text(0.5*R1*cos(pi/6)-0.2, 0.5*R1*sin(pi/6) + 0.3, 
+     'r', cex = 1.4, col = 'white')
+
+
+
+#R plot Fig. 7.9(a): A positive vortex field u = (-y, x)
+m=5
+n=20
+r = c(0.5, 0.9, 1.3, 1.7, 2.1)
+u1=u2=x=y=xa=ya=th= 1:n #define dequences for variables
+plot(0,  xlim = c(-3,3), ylim = c(-3, 3),
+     type ='n', xlab = 'x', ylab = 'y',
+     cex.lab =1.5, cex.axis=1.5)
+for(j in 1:m){
+  for(i in 1:n){th[i]= i*2*pi/n + (j-1)*pi/n
+  x[i] = r[j]*cos(th[i])
+  y[i] = r[j]*sin(th[i])
+  u1[i] = -y[i]
+  u2[i] = x[i]
+  xa[i] = x[i] + u1[i]
+  ya[i] = y[i] + u2[i]
+  }
+  arrows(x,y,xa,ya, angle=10, length=0.1)
+}
+
+
+#R plot Fig. 7.9(b): A negative vortex field u = (y, -x) 
+m=5
+n=20
+r = c(0.5, 0.9, 1.3, 1.7, 2.1)
+u1 = u2 = x=y=xa=ya=th= 1:n
+plot(0,  xlim = c(-3,3), ylim = c(-3, 3),
+     type ='n', xlab = 'x', ylab = 'y',
+     cex.lab =1.5, cex.axis=1.5)
+for(j in 1:m){
+  for(i in 1:n){th[i]= i*2*pi/n + (j-1)*pi/n
+  x[i] = r[j]*cos(th[i])
+  y[i] = r[j]*sin(th[i])
+  u1[i] = y[i]
+  u2[i] = -x[i]
+  xa[i] = x[i] + u1[i]
+  ya[i] = y[i] + u2[i]
+  }
+  arrows(x,y,xa,ya, angle=10, length=0.1)
+}
+
+#The vector field at a given point (-1, 1)
+x = -1
+y = 1
+u1 = y 
+u2 = -x
+xa = x + u1
+ya = y + u2
+arrows(x,y,xa,ya, angle=30, length=0.1, 
+       lwd = 2, col = 'red')
+
+#Problem 7.32: vector field is vectoru = (x+y, y-x)
+m=5
+n=20
+r = c(0.5, 0.9, 1.3, 1.7, 2.1)
+x=y=xa=ya=th= 1:n
+plot(0,  xlim = c(-8,8), ylim = c(-8, 8),
+     type ='n', xlab = 'x', ylab = 'y',
+     cex.lab =1.5, cex.axis=1.5)
+for(j in 1:m){
+  for(i in 1:n){th[i]= i*2*pi/n + (j-1)*pi/n
+  x[i] = r[j]*cos(th[i])
+  y[i] = r[j]*sin(th[i])
+  xa[i] = x[i] + (x[i] + y[i]) 
+  ya[i] = y[i] + (y[i]- x[i])
+  }
+  arrows(x,y,xa,ya, angle=10, length=0.1)
+}
+
+#The vector field at a given point (-1, 1)
+x = -1
+y = 1
+ux = (x + y) 
+uy = (y - x)
+xa = x + ux
+ya = y + uy
+arrows(x,y,xa,ya, angle=30, length=0.1, 
+       lwd = 2, col = 'red')
+
+plot(x,y,  xlim = c(-3,3), ylim = c(-3, 3),
+     xlab = 'x', ylab = 'y',
+     cex.lab =1.5, cex.axis=1.5)
+
+
+#A fancy vector field
+m=40
+n=200
+r = seq(0, 2.3, len = m)
+u1=u2=x=y=xa=ya=th= 1:n #define dequences for variables
+plot(0,  xlim = c(-2.5,3.5), ylim = c(-2.5, 3),
+     type ='n', xlab = 'x', ylab = 'y',
+     cex.lab =1.5, cex.axis=1.5)
+for(j in 1:m){
+  for(i in 1:n){th[i]= i*2*pi/n + (j-1)*pi/n
+  x[i] = r[j]*cos(th[i])
+  y[i] = r[j]*sin(th[i])
+  u1[i] = cos(-y[i])
+  u2[i] = sin(x[i]^2)
+  xa[i] = x[i] + u1[i]
+  ya[i] = y[i] + u2[i]
+  }
+  arrows(x,y,xa,ya, lwd = 0.5, 
+         angle=10, length= 0.05, col = 1:n)
+}
+
+#A fancy vector field as an art piece
+m=40
+n=200
+r = seq(0, 2.3, len = m)
+u1=u2=x=y=xa=ya=th= 1:n #define dequences for variables
+plot(0,  xlim = c(-2.5,3.5), ylim = c(-2.5, 3),
+     type ='n', xlab = '', ylab = '',
+     axes = FALSE, main = "Vector Field Fancy")
+for(j in 1:m){
+  for(i in 1:n){th[i]= i*2*pi/n + (j-1)*pi/n
+  x[i] = r[j]*cos(th[i])
+  y[i] = r[j]*sin(th[i])
+  u1[i] = cos(-y[i])
+  u2[i] = sin(x[i]^2)
+  xa[i] = x[i] + u1[i]
+  ya[i] = y[i] + u2[i]
+  }
+  arrows(x,y,xa,ya, lwd = 0.5, 
+         angle=10, length= 0.05, col = 1:n)
+}
+
+#A fancy vector field as an art piece
+m=60
+n=800
+r = seq(0, 4, len = m)
+u1=u2=x=y=xa=ya=th= 1:n #define dequences for variables
+plot(0,  xlim = c(-3,3.5), ylim = c(-3, 3),
+     type ='n', xlab = '', ylab = '',
+     axes = FALSE, main = "Vector Field Fancy")
+colorcode = 3*(1:n)
+for(j in 1:m){
+  for(i in 1:n){th[i]= i*2*pi/n + (j-1)*pi/n
+  x[i] = r[j]*cos(th[i])
+  y[i] = r[j]*sin(th[i])
+  u1[i] = cos(0.5*x[i] - 0.6*y[i])
+  u2[i] = sin(0.5*x[i] + 0.6*y[i])
+  xa[i] = x[i] + 0.5*u1[i]
+  ya[i] = y[i] + 0.5*u2[i]
+  }
+  arrows(x,y,xa,ya, lwd = 0.8, 
+         angle=10, length= 0.05, col = colorcode)
+}
