@@ -1,0 +1,239 @@
+##############################################################
+######################## Chapter 3 ###########################
+#Fundamental theorem of calculus and approximation theory ####
+##############################################################
+# By Samuel S.P. Shen
+# Distinguished Professor of Mathematics and Statistics
+# San Diego State University
+# https://shen.sdsu.edu
+# Email:sshen@sdsu.edu
+# Version 1.0 developed from May 2021 for Cal III
+
+#Go to the working directory of your computer
+setwd('/Users/sshen/CalculusR')
+
+#
+#Two-dice simulation
+x=y=1:6 #Two dice x and y
+m=100000 #Simulate m times
+l=0 #k is used as the counter for a specific event, such as "7"
+for (i in 1:m) {if(sample(x,1)+sample(y,1) == 7) l=l+1}
+l/m #The simulated probability
+#[1] 0.16702 which is approximately 1/6.
+
+#
+#
+# Fig. 3.1: R code
+#R simulation to estimate the area of a unit disc 
+#in a 2-dimensional space
+rm(list=ls())#remove the R console history
+N=10000
+x = y =matrix(runif(2*N, -1,1),ncol=2)
+k=0
+for(i in 1:N){if((t(x[i,])%*%x[i,]) < 1) {k=k+1
+y[k,]=x[i,]}
+}
+k
+#r=k/N is the ratio of points inside the ball to the 
+#total number of points. r*2^2 is the ball's volume
+#since 2^2 is the total volume of the square of side
+#equal to the diameter of the disk. 
+(k/N)*2^2
+#[1] 3.1412 approximate value of pi
+k #[1] 7853
+par(mar=c(4.5,4.5,3,0.5))
+#Plot all the 10000 points x[1:N,] inside the square
+plot(x,pch=19, cex=0.2, 
+     xlim=c(-1,1),ylim=c(-1,1),
+     xlab=expression("x"[1]),
+     ylab=expression("x"[2]), 
+     cex.lab=1.5, cex.axis=1.5,
+     main="10000 random points on a 2D square")
+#Plot 7853 red points y[1:k,] inside the unit circle
+points(y[1:k,],pch=19, cex=0.3,col="red") 
+
+#
+#
+#R code for Example 3.1
+#MC for an integral
+f<-function(x){x^2} #Define a function
+f
+function(x){x^2}
+x=runif(100, 1,3) #Using 1,000 samples
+(3-1)*mean(f(x))
+#[1] 8.722102  is the result from the MC method 
+x=runif(1000000,1,3) #Using 1,000,000 samples
+(3-1)*mean(f(x))
+#[1] 8.667114 is the result from the MC method 
+integrate(f,1,3) #R code for numerical integration
+#8.666667 with absolute error < 9.6e-14
+
+#
+#
+#R code for Example 3.2
+#Monte Carlo int[exp(-x^2)/(1+x^2), -1, 2]
+f2<- function(x){exp(-x^2)/(1+x^2)}
+f2
+function(x){exp(-x^2)/(1+x^2)}
+x=runif(100000, -1, 2)
+(2-(-1))*mean(f2(x))
+#[1] 1.273097 is the MC result
+integrate(f2, -1, 2) #R's numerical integration algorithm
+#1.289754 with absolute error < 7e-11 # almost exact value
+
+#
+#
+#
+#R code for Example 3.3
+#int[exp(-x^2)/(1+x^2), -1,2]
+f2<- function(x){exp(-x^2)/(1+x^2)}
+f2
+#function(x){exp(-x^2)/(1+x^2)}
+n = 100
+x = seq(-1, 2, len = n+1)
+sum(f2(x[1:n]))*(2-(-1))/n
+#[1] 1.292416
+#An more accurate answer is below
+integrate(f2, -1, 2)
+#1.289754 with absolute error < 7e-11
+
+#
+#
+#
+#R code for Example 3.4: Monte Carlo integral on a 2D disc
+# int(1+r^2, on a unit disk in 2D)
+
+N=100000
+x=matrix(runif(2*N, -1,1),ncol=2) 
+redx =matrix(1,ncol=2,nrow=N)
+x[1:6,]
+redx[1:6,]
+
+k=0
+for(i in 1:N){
+  if((t(x[i,])%*%x[i,]) < 1) {
+    k=k+1 
+    redx[k,]=x[i,]}
+}
+k 
+#[1] 78584 points inside the unit disc B2 in the 2D space 
+#y[1:k,] are points inside the unit ball
+
+red1=redx[1:k,1]
+red2=redx[1:k,2]
+
+f=function(x1,x2){1 + x1^2 + x2^2}
+n=2
+V2= pi #Compute the area of B2
+V2*mean(f(red1,red2)) 
+#Area of B2 times the mean value of the function
+#[1] 4.711905 is the approximate value of the 2D integral
+# The exact value of the integral is 
+3*pi/2
+#[1] 4.712389
+
+#
+#
+#
+#R code for Example 3.5: Monte Carlo integration in a 5D ball
+# Extend it to 5D
+N=100000
+x=matrix(runif(5*N, -1,1),ncol=5) 
+y=matrix(5,ncol=5,nrow=N)
+
+k=0
+for(i in 1:N){
+  if((t(x[i,])%*%x[i,]) < 1) {
+    k=k+1 
+    y[k,]=x[i,]}
+}
+k 
+#[1] 16506 points inside the unit ball B5 in the 5D space 
+#y[1:k,] are points inside the unit ball
+
+r1=y[1:k,1]
+r2=y[1:k,2]
+r3=y[1:k,3]
+r4=y[1:k,4]
+r5=y[1:k,5]
+
+f=function(x1,x2,x3,x4,x5){1 + x1^2 + x2^2 + x3^2 + x4^2 + x5^2}
+n=5
+
+V5= pi^(n/2)/gamma(n/2 +1) 
+#Compute the volume of B5
+V5*mean(f(r1,r2,r3,r4,r5)) 
+#volume of B5 times the mean value of the function
+#[1] 9.031473 is the approximate value of the 5D integral
+
+#
+#
+#
+#R code for Table 3.1: Linear approximation and its error
+x <- seq(-0.3,0.3, by=0.1)
+fx <- c(1:7)
+lx <- c(1:7)
+ex <- c(1:7)
+for(i in 1:7){fx[i]=(1+x[i])^4
+lx[i]=1+4*x[i]
+ex[i]=((1+x[i])^4-(1+4*x[i]))/((1+x[i])^4)*100
+}
+round(cbind(x, fx, lx, ex), digits=4)
+
+#
+#
+#
+#R code to generate two sine waves
+library(audio)
+x <- audioSample(0.3*sin(0.1*(1:4000)) + 
+                   0.9*sin(0.7*(1:4000)), 
+                 bits = 16, 5000)
+play(x) #You can hear the sound by running this line
+
+#
+#
+#
+#R code for plotting Fig. 3.5
+plot(x[1:400], type = 'l', 
+     xlab = 'Time', ylab = 'Vibration',
+     main = 'Sum of Two Sine Waves', 
+     col ='blue')
+
+#
+#
+#
+#R code for plotting Fig. 3.6: Fourier series over [-1,1]
+i  = complex(real = 0, imaginary = 1)
+T = 2
+t = seq(-T/2,T/2, len = 401)
+#Define the original function x(t)
+xt <- ( t >= -1 & t < 0) * (-4) +
+  ( t <= 1 & t > 0) * (4) 
+#Plot the function x(t)
+setEPS()
+postscript("fig0315.eps", height=5, width=8)
+par(mar = c(4, 4.5, 2, 0.5))
+plot(t, xt, type = 'l', 
+     ylim = c(-5,5),
+     xlab='t', ylab='x(t)',
+     main = 'Approximate a function by a finite sum of Fourier series',
+     cex.lab = 1.5, cex.axis =1.4, cex.main =1.4,
+     lwd = 5, col = 'red')
+
+#Plot the partial sum of Fourier series from -K to K
+J = c(3, 10, 100)
+Fcol = c('brown', 'blue','black')
+for (j in 1:3){
+  k = -J[j]:J[j]
+  RK= colSums(8/(i*pi*(2*k-1))*exp(i*pi*outer(2*k-1, t)))
+  lines(t, Re(RK), type = 'l', 
+        col = Fcol[j])
+}
+legend(-1.05, 5.1, 
+       legend = c('Function x(t)', 'Sum of 7 terms', 
+                  'Sum of 21 terms', 'Sum of 201 terms'),
+       col = c('red', 'brown', 'blue', 'black'), 
+       lty = c(1,1,1,1), lwd = c(5, 1,1,1),
+       cex = 1.3, bty = 'n')
+dev.off()
+
