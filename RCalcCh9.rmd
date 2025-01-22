@@ -1,0 +1,278 @@
+##############################################################
+######################## Chapter 9 ###########################
+##########     Integral in n-dimensional Space ##############
+##############################################################
+# By Samuel S.P. Shen
+# Distinguished Professor of Mathematics and Statistics
+# San Diego State University
+# https://shen.sdsu.edu
+# Email:sshen@sdsu.edu
+# Version 1.0 developed from May 2021 for Cal III
+
+setwd('/Users/sshen/CalculusR')
+
+#R plot Fig. 9.1: Example 9.1
+library(plotly)
+par(mar = c(0,0,0,0.0))
+x =y= seq(0,1, len=101)
+z = outer(x, y, function(x,y){ x^2 + y^2})
+p <- plot_ly(x = ~x, y = ~y, z = ~ z,
+             type = 'surface')
+p
+hide_colorbar(p)
+
+#Monte Carlo method for a double integral on a rectangle
+N = 10000
+x = runif(N, 0, 1)
+#z = rnorm(N, 0, 1)
+x
+f = function(x){sin(x^2)}
+f(x)
+fbar = mean(f(x))
+b=1
+a =0
+intf = fbar*(b-a)
+intf
+#[1] 0.3328637
+
+N = 100000
+x = runif(N, 0, 1)
+#z = rnorm(N, 0, 1)
+x
+f = function(x){cos(x^2) + exp(-x^3)}
+f(x)
+fbar = mean(f(x))
+b=1
+a =0
+intf = fbar*(b-a)
+intf
+
+
+#Example 9.2
+#Monte Carlo method for a double integral on a rectangle
+N = 10000
+x = runif(N, 0, 1)
+x
+par(mar=c(4,4,2,1))
+plot(x, pch = 16, lwd = 0.01, cex = 0.09)
+hist(x)
+
+x = y = runif(N, 0, 1)
+#z = rnorm(N, 0, 1)
+x
+f = function(x,y){x^2 + y^2}
+f(x,y)
+fbar = mean(f(x,y))
+fbar
+V = 1
+intf = fbar*V
+intf
+#[1] 0.6596633
+
+#Example 9.3
+#Monte Carlo method for the volume of a 3D ball
+N = 100000
+R = 2 #Assume radius R = 2
+#This can be adjusted according to needs
+p = matrix(runif(3*N, -R, R), ncol =3)
+p
+k = 0
+for(i in 1:N){if((p[i,]%*%p[i,])[1,1] < R^2)
+  k = k+1}
+k
+k/N
+V = (k/N)*(2*R)^3
+V
+#[1] 33.49888
+
+#Formula value
+(4/3)*pi*R^3
+#[1] 33.51032
+
+#
+#
+#Example 9.3-4D case
+#Monte Carlo method for the volume of a 4D ball
+N = 100000
+R = 2 #Assume radius R = 2
+#This can be adjusted according to needs
+p = matrix(runif(9*N, -R, R), ncol =4)
+p
+k = 0
+for(i in 1:N){if((p[i,]%*%p[i,])[1,1] < R^2)
+  k = k+1}
+k
+k/N
+V = (k/N)*(2*R)^4
+V
+#[1] 78.48704
+
+#Example 9.3-2D case
+#Monte Carlo method for the volume of a 2D round disc
+N = 100000
+R = 2 #Assume radius R = 2
+#This can be adjusted according to needs
+p = matrix(runif(9*N, -R, R), ncol =2)
+p
+k = 0
+for(i in 1:N){if((p[i,]%*%p[i,])[1,1] < R^2)
+  k = k+1}
+k
+k/N
+V = (k/N)*(2*R)^2
+V
+#[1] 12.5896  
+#Formula value
+pi*R^2
+#[1] 12.56637
+
+#Example 9.4: Volume of a spherical cap Monte Carlo
+N = 100000
+R = 1 #Work on the unit ball
+phi = 66.5*pi/180
+p = matrix(runif(3*N, -R, R), ncol =3)
+p
+p[1:5,]
+
+r = s = matrix(rep(5,3*N), ncol =3)
+r
+rep(3,5)
+
+k = 0
+for(i in 1:N){if(t(p[i,])%*%p[i,] < R^2 ){
+  k = k+1
+  r[k,] = p[i,]}
+}
+
+k #points inside the ball
+r[1:k,]
+
+k/N
+m=0
+for(i in 1:k){if(r[i,3] >= R*sin(phi) ){
+  m = m + 1
+  s[m,] = r[i,]
+  print(paste('m=', m, 's[m,3]=', s[m,3]))}
+}
+s[1:m]
+s[1:5,]
+R*sin(phi) 
+plot(s[1:m,3], type = 'o')
+m #points inside the cap
+m/N
+V = (m/N)*(2*R)^3
+V
+#[1] 0.02024 i.e., the cap volume is 0.02024*R^3
+0.02024/(4*pi/3) 
+#[1] 0.004831944 means about 0.5% of the ball's volume
+
+#R plot the points in y-z plane when x=0
+par(mar = c(4.2,4,0.5,0.5))
+plot(p[,2], p[,3], pch=16, cex =0.1,
+     xlab = 'y', ylab = 'z')
+points(r[1:k,2], r[1:k,3], 
+       pch=16, cex =0.2, col= 'red')
+points(s[1:m,2], s[1:m,3], 
+       pch =16, cex =0.4, col = 'blue')
+#Plot the points in x-z plane when x=0
+par(mar = c(4.2,4,0.5,0.5))
+plot(p[,1], p[,3], pch=16, cex =0.1,
+     xlab = 'x', ylab = 'z')
+points(r[1:k,1], r[1:k,3], 
+       pch=16, cex =0.2, col= 'red')
+points(s[1:m,1], s[1:m,3], 
+       pch =16, cex =0.4, col = 'blue')
+
+
+#Monte Carlo integral without plotting
+N = 100000
+R = 1 #Work on the unit ball
+phi = 66.5*pi/180
+p = matrix(runif(3*N, -R, R), ncol =3)
+k = 0
+for(i in 1:N){if(t(p[i,])%*%p[i,] <= R^2 && 
+                 p[i,3] >= R*sin(phi)){k = k+1}}
+(k/N)*(2*R)^3 #volume of the cap
+#[1] 0.02096 R^3 
+
+#
+#
+#Monte Carlo integral int_D exp(-x^2-y^2)
+N = 100000
+R = 2 #Work on the unit disk
+p = q = matrix(runif(2*N, -R, R), ncol =2)
+f = function(x,y){exp(-x^2 - y^2)}
+k = 0
+for(i in 1:N){if(t(p[i,])%*%p[i,] <= R^2){
+  k = k+1
+  q[k,] = p[i,]}
+}
+k
+x = q[1:k,1]; y = q[1:k,2];
+mean(f(x, y))*pi*R^2 #The integral
+#[1] 3.088491
+
+
+#
+#
+#Monte Carlo method on a sphere
+N = 10000
+R = 1
+phi = 75
+#Find points randomly uniformly distributed on a sphere
+#Algorithm ref: Marsaglia (1972) Ann. Math. Stat. 43,645-646 
+p = q = matrix(runif(2*N, -R, R), ncol =2)
+k = 0
+for(i in 1:N){if(t(p[i,])%*%p[i,] <= R^2){
+  k = k+1
+  q[k,] = p[i,]}
+}
+M = k
+#Find the points on a polar cap
+u = q[1:M, 1]
+v = q[1:M, 2]
+s = u^2 + v^2
+x = 2*u*sqrt(1-s)
+y = 2*v*sqrt(1-s)
+z = 1-2*s
+M
+x2 = y2 = z2 = x
+m=0
+for(i in 1:M){if(abs(z[i]) >= R*sin(phi*pi/180)){
+  m = m+1 
+}
+}
+Mcap = m
+Mcap
+#The area of the Artic polar cap
+0.5*(Mcap / M)*4*pi*R^2
+#[1] 0.2115784
+
+
+#
+#
+#Example 9.6
+#Parametric integration for a line integral
+f = function(t){t + t^2 + 2*t^3}
+integrate(f, 0, 2)
+#12.66667 with absolute error < 1.4e-13
+
+#Example 9.6 from the original integral formation
+n = 1000
+a = 0
+b = 2
+m = n+1
+x = seq(a, b, len = m)
+y = x^2
+dx = (b-a)/n
+dy = 2*x*dx
+I = sum((x-y)*dx + (x + y)*dy)
+I #The line integral is equal to
+#[1] 12.68868
+
+
+f = function(x){x^2}
+integrate(f, 0, 1)
+
+f = function(t){sqrt(1 + 3*t^2)}
+integrate(f, -9, 6)
