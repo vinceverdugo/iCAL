@@ -1,0 +1,289 @@
+##############################################################
+######################## Chapter 8 ###########################
+##########     Applications of Partial Derivatives ###########
+##############################################################
+# By Samuel S.P. Shen
+# Distinguished Professor of Mathematics and Statistics
+# San Diego State University
+# https://shen.sdsu.edu
+# Email:sshen@sdsu.edu
+# Version 1.0 developed from May 2021 for Cal III
+
+setwd('/Users/sshen/CalculusR')
+
+#R plot Fig. 8.1(a): Dorm surface 
+library(plotly)
+par(mar = c(0,0,0,0.0))
+x = y = seq(-1,1, len=51)
+z = outer(x, y, function(x,y){5 - x^2 - 2*y^2})
+p <- plot_ly(x = ~x, y = ~y, z = ~ z, 
+             type = 'surface')
+hide_colorbar(p)
+
+#Plot Fig. 8.1(b): Saddle surface 
+z = outer(x, y, function(x,y){5 - x^2 + 2*y^2})
+p <- plot_ly(x = ~x, y = ~y, z = ~ z, 
+             type = 'surface')
+p
+hide_colorbar(p)
+
+# R plot Fig. 8.2(a): A surface in 3D
+library(plotly)
+par(mar = c(0,0,0,0))
+n = 301
+x = y= seq(-2, 2, len=n)
+f = function(x,y){x^4 + 2*y^4 -8*x*y + 1}
+z = outer(x, y, f)
+w = z
+for(i in 1:n){
+  for(j in 1:n){
+    if(w[i,j] > 4){z[i,j] = NaN}
+  }
+}
+p <- plot_ly(x = ~x, y = ~y, z = ~ z, 
+             type = 'surface')
+hide_colorbar(p)
+
+# Plot Fig. 8.2(b): Filled contour map
+par(mar = c(4.5,4.5,2,0.5))
+filled.contour(x,y,w,  nlevels = 60,
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               plot.title=title("Color map and contour levels", 
+                                xlab="x", ylab="y", cex.lab=1.5),
+               plot.axes = {axis(1, cex.axis = 1.5); 
+                 axis(2, cex.axis = 1.5);
+                 points(c(0, 1.3,-1.3), c(0, 1.1,-1.1), 
+                        pch =16, cex= 1.2, col = 'white')})
+
+f(1.3, 1.1)
+f(-1.3, -1.1)
+
+#solve x^9 - 8x = 0
+fct = function(x){x^9 - 8*x}
+fct
+plot(fct, -1.5, 1.5)
+lines(c(-2,2), c(0,0), type ='l', col = 'red')
+#guess solutions x1 = 0, x2 = -1.3, x3 = 1.3
+
+#Use to find more accurate solutions
+uniroot(fct, c(-3, -1))
+#[1] -1.296813
+
+uniroot(fct, c(1, 2))
+#[1] 1.296841
+
+uniroot(fct, c(-1, 1))
+#[1] 0
+
+x2 = -1.3
+x2^3/2
+#[1] -1.0985
+
+# R plot Fig. 8.3(a): Constrained extrema
+par(mar = c(4.5,4.5,2,0.5))
+x =y= seq(-2,2, len=51)
+z = outer(x, y, function(x,y){5 - x^2 + 2*y^2})
+contour(x,y,z,  nlevels = 20, lty = "dotted",
+        xlab = 'x', ylab = 'y', 
+        cex.lab = 1.4, cex.axis = 1.4)
+contour(x,y,z,  levels = c(4,7), add =TRUE,
+        labcex =1.5)
+#lines(x/2, sqrt(1-(x/2)^2), type='l', col='blue')
+#lines(x/2, -sqrt(1-(x/2)^2), type='l', col='blue')
+t = seq(0, 2*pi, len = 201)
+x = cos(t)
+y = sin(t)
+lines(x, y, col = 'blue')
+points(0,0, pch =16, cex= 1.2, col = 'red')
+
+x = seq(-2, 2, len = 101)
+y = x^9 - 8*x
+plot(x,y, type = 'l', ylim = c(-4,4))
+# R plot Fig. 8.3(b): Constrained extrema
+x =y= seq(-2, 2, len=n)
+f = function(x,y){x^4 + 2*y^4 -8*x*y + 1}
+f(2,-2)
+z = outer(x, y, f)
+z[1:4, 1:4]
+dim(z)
+#contour(x,y,z,  nlevels = 50)
+contour(x,y,z, levels = seq(-5, 5, by = 1), 
+        lty = "dotted", 
+        xlab = 'x', ylab = 'y', 
+        cex.lab = 1.4, cex.axis = 1.4)
+contour(x,y,z, levels = seq(5, 80, by = 5), 
+        lty = "dotted", add=TRUE)
+contour(x,y,z, levels = c(-2.3, 5.8), 
+        labcex = 1.1, add=TRUE)
+#plot the unit circle trail
+t = seq(0, 2*pi, len = 201)
+x = cos(t)
+y = sin(t)
+lines(x, y, col = 'blue')
+#lines(x/2, sqrt(1-(x/2)^2), type='l', col='blue')
+#lines(x/2, -sqrt(1-(x/2)^2), type='l', col='blue')
+points(c(0, 1.3,-1.3), c(0, 1.1,-1.1), 
+       pch =16, cex= 1.2, col = 'red')
+
+        
+        
+x = seq(-1,1, len =201)
+fx = function(x){2 -x^2 -3*(1-x^2)}
+g = rep(0, length(x))
+plot(x, fx(x), type='l')
+lines(x, g, type='l', col = 'red')
+summary(fx(x))
+
+x = seq(-1,1, len =201)
+fx = function(x){x^4 + 2*(1-x^2)^2 - 8*x*(1-x^2)^(1/2) +1}
+g = rep(0, length(x))
+plot(x, fx(x), type='l')
+lines(x, g, type='l', col = 'red')
+summary(fx(x))
+#-2.2726 -0.7578  2.9196  2.2654  5.1934  5.7990 
+
+####
+library(plotly)
+par(mar = c(0,0,0,0.0))
+n = 201
+x =y= seq(-2, 2, len=n)
+z = outer(x, y, function(x,y){-x^4 - 2*y^4 +8*x*y})
+w = z
+for(i in 1:n){
+  for(j in 1:n){
+    if(w[i,j] < -3){z[i,j] = NaN}
+  }
+}
+max(z)
+p <- plot_ly(x = ~x, y = ~y, z = ~ z, 
+             type = 'surface')
+hide_colorbar(p)
+
+
+# Contours
+par(mar = c(4.5,4.5,2,0.5))
+filled.contour(x,y,z,  nlevels = 20,
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               plot.title=title("Color map and contour levels", 
+                                xlab="x", ylab="y", cex.lab=1.2),
+               plot.axes = {axis(1, cex.axis = 1.1); 
+                 axis(2, cex.axis = 1.1); 
+                 contour(x, y, z, levels = c(2.9, 2,2.5, 1.5),
+                         labels = c('2.9', '2', '2.5', '1.5'), 
+                         col = "black", add = TRUE)})
+
+#
+#Linear approximation: Section 8.3
+f = function(x,y){1-x^2 - y^2}
+L = function(x,y){-2*x-2*y +3}
+f(1.2, 0.9)
+#[1] -1.25
+L(1.2, 0.9)
+#[1] -1.2
+100*(f(1.2, 0.9) - L(1.2, 0.9))/f(1.2, 0.9)
+#4  #4% relative error
+
+#
+#
+#Exercise 8.1: Contour plot
+x = y = seq(-2,2, len = 401)
+f = function(x,y){1 + 3*y - y^3 - 2*x^2 + x^4}
+z = outer(x,y, f)
+par(mar=c(4.0, 4.0, 0.5, 0.5))
+contour(x,y,z, col = 'red',
+        levels = c(-2, -1.9, -1.8, -1.5, -1, -0.5),
+        lty='dotted',
+        xlab = 'x', ylab = 'y')
+contour(x,y,z, 
+        levels = c(0), lty='dashed', 
+        col = 'purple', add = TRUE)
+contour(x,y,z, col = 'red',
+        levels = c(0.5, 1, 1.5, 2, 2.3, 2.5, 
+                   2.7, 2.9, 3, 4, 5),
+        add = TRUE)
+
+#Exercise 8.10
+# Constrained extrema
+par(mar = c(4.5,4.5,2,0.5))
+x =y= seq(-2, 2, len = 151)
+z = outer(x, y, function(x,y){x^4 + 2*y^4 - 8*x*y + 1})
+contour(x,y,z,  nlevels = 50, lty = "dotted",
+        xlab = 'x', ylab = 'y', 
+        cex.lab = 1.4, cex.axis = 1.4)
+contour(x,y,z,  levels = c(-2.3,5.8), add =TRUE,
+        labcex =1.5, col = 'purple')
+#plot the circle path/constraint
+lines(x/2, sqrt(1-(x/2)^2), type='l', col='orange')
+lines(x/2, -sqrt(1-(x/2)^2), type='l', col='orange')
+points(0, 0, pch =3, cex= 1.2)
+
+#Solve the equation for x
+f1 = function(x){x*sqrt(1 - x^2) * (3*x^2 -2) + 4*x^2 -2}
+uniroot(f1, c(0, 0.75))
+#[1] 0.7384568
+x1 = 0.7384568
+y1 = sqrt(1 - x1^2)
+y1
+#[1] 0.6743008
+points(x1, y1, pch =16, cex= 1.2, col = 'blue')
+
+uniroot(f1, c(-1, 0))
+#[1] -0.63482
+x2 =-0.63482
+y2 = sqrt(1 - x2^2)
+y2
+#[1] 0.7726601
+points(x2, y2, pch =16, cex= 1.2, col = 'red')
+
+# y < 0
+f2 = function(x){-x*sqrt(1 - x^2) * (3*x^2 -2) + 4*x^2 -2}
+uniroot(f2, c(-0.8, -0.2))
+#[1] 0.7384568
+x3 = -0.7384722
+y3 = -sqrt(1 - x3^2)
+y3
+#[1] -0.6742839
+points(x3, y3, pch =16, cex= 1.2, col = 'blue')
+
+uniroot(f2, c(0.5, 0.8))
+#[1] 0.6348268
+x4 = 0.6348268
+y4 = -sqrt(1 - x4^2)
+y4
+#[1] -0.7726545
+points(x4, y4, pch =16, cex= 1.2, col = 'red')
+
+f = function(x,y){x^4 + 2*y^4 - 8*x*y +1}
+f(x1,y1)
+#[1] -2.272693 min
+f(x2,y2)
+#[1] 5.799233 max
+f(x3,y3)
+#[1] -2.272693 min
+f(x4,y4)
+#[1] 5.799233 max
+text(x1-0.12, y1 - 0.10, bquote(P[1]), 
+     cex = 1.4, col = 'blue')
+text(x2+0.1, y2 - 0.15, bquote(P[2]), 
+     cex = 1.4, col = 'red')
+text(x3+0.15, y3 + 0.08, bquote(P[3]), 
+     cex = 1.4, col = 'blue')
+text(x4-0.09, y4 + 0.15, bquote(P[4]), 
+     cex = 1.4, col = 'red')
+
+#Verify the solutions for x
+#y > 0
+x = seq(-1, 1, len = 301)
+f1 = function(x){x*sqrt(1 - x^2) * (3*x^2 -2) + 4*x^2 -2}
+plot(x, f1(x), type = 'l')
+xaxis = rep(0, length(x))
+lines(x, xaxis, col = 'green')
+
+#y <0
+x = seq(-1, 1, len = 301)
+f2 = function(x){-x*sqrt(1 - x^2) * (3*x^2 -2) + 4*x^2 -2}
+plot(x, f2(x), type = 'l')
+xaxis = rep(0, length(x))
+lines(x, xaxis, col = 'green')
