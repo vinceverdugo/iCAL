@@ -1,0 +1,582 @@
+##############################################################
+######################## Chapter 10 ##########################
+##########     Stokes-Cartan Theorem             #############
+##############################################################
+# By Samuel S.P. Shen
+# Distinguished Professor of Mathematics and Statistics
+# San Diego State University
+# https://shen.sdsu.edu
+# Email:sshen@sdsu.edu
+# Version 1.0 developed from May 2021 for Cal III
+
+setwd('/Users/sshen/CalculusR')
+
+#Example of computing the area of an ellipse by a planimeter 
+n=1000
+a=4
+b=2
+t=seq(0, 2*pi, length = n+1)
+x=a*cos(t)
+y=b*sin(t)
+s=rep(0,n)
+for (i in 1:n){s[i] = (1/2)*(-y[i]*(x[i+1]-x[i]) + x[i]*(y[i+1]-y[i]))}
+A=sum(s)
+A
+#[1] 25.13258
+
+#A simplified version for the area of an ellipse by a planimeter 
+n=1000
+a=4
+b=2
+t=seq(0, 2*pi, length = n+1)
+x=a*cos(t)
+x
+y=b*sin(t)
+y
+x[1]
+y[1]
+c(x[1:3], y[1:3])
+plot(x, y, cex = 0.1)
+s=rep(0,n)
+for (i in 1:n){s[i] = -y[i]*x[i+1] + x[i]*y[i+1]}
+A=0.5*sum(s)
+A
+#[1] 25.13258
+#The area of an ellipse according to formula: pi ab
+pi*a*b
+#[1] 25.13274
+
+#
+#
+#Compute the area of an ellipse by a planimeter with u = (0, x)
+n=1000
+a=4
+b=2
+t=seq(0, 2*pi, length = n+1)
+x=a*cos(t)
+y=b*sin(t)
+s=rep(0,n)
+for (i in 1:n){s[i] =  x[i]*(y[i+1]-y[i])}
+A = sum(s)
+A
+#[1] 25.13258
+plot(x, y, type = 'l')
+
+#ChatGPT code
+a <- 3 # semi-major axis
+b <- 2 # semi-minor axis
+
+# Define the vector field F(x,y)
+F <- function(x,y) {
+  c(-y/2, x/2)
+}
+
+# Calculate the line integral using the parametric equation of the ellipse
+a <- 4 # semi-major axis
+b <- 2 # semi-minor axis
+
+# Define the vector field F(x,y)
+F <- function(x,y) {
+  c(-y/2, x/2)
+}
+
+# Define the parametric equation of the ellipse
+x <- function(t) a * cos(t)
+y <- function(t) b * sin(t)
+
+# Define the derivative of the parametric equation
+dx <- function(t) -a * sin(t)
+dy <- function(t) b * cos(t)
+
+# Define the line integral using the parametric equation of the ellipse
+integral <- 0
+n <- 1000 # number of points
+t <- seq(0, 2*pi, length.out = n)
+for (i in 1:(n-1)) {
+  x1 <- x(t[i])
+  y1 <- y(t[i])
+  x2 <- x(t[i+1])
+  y2 <- y(t[i+1])
+  dx <- x2 - x1
+  dy <- y2 - y1
+  integral <- integral + F(x2,y2) %*% c(dx,dy)
+}
+
+# Calculate the area using Green's theorem
+area <-  integral
+print(paste("The area of the ellipse is", area))
+
+
+#Exams 
+#Midterm 2
+#Problem 5
+del = 0.01
+x = y = seq(-pi+del, pi-del, len = 401)
+f = function(x,y){sin(x)*sin(y)}
+z = outer(x, y, f)
+par(mar=c(4.0, 4.0, 0.5, 0.5))
+contour(x,y,z, col = 'blue',
+        levels = seq(-1,0, len =21),
+        lty='dotted',
+        xlab = 'x', ylab = 'y',
+        cex.lab =1.4, cex.axis = 1.4)
+contour(x,y,z, 
+        levels = seq(0,1, len =21),
+        col = 'red', add = TRUE)
+x
+
+# Exercise 10. 6(a): Model flower pedals 
+setwd('/Users/sshen/CalculusR')
+par(mar=c(4,4,2,0.2))
+# eight petals 
+a = 3
+k = 4
+n = 1000
+ome = 2
+t = seq(0, 2*pi, len=n)
+theta = ome*t
+r = a*cos(k*theta)
+x = r*cos(theta)
+y = r*sin(theta)
+plot(x, y,  type = 'l', lwd = 4, col = 'pink',
+     main = 'An eight-petal rose')
+x
+
+plot(x[1:125], y[1:125],  type = 'l', lwd = 4, col = 'pink',
+     main = 'An eight-petal rose')
+
+plot(x[33:94], y[33:94], 
+     xlim = c(-3, 3), ylim = c(-3, 3),
+     type = 'l', lwd = 1, col = 'red',
+     main = 'An eight-petal rose')
+
+#Apply Green's theorem
+xpedal = x[33:94]
+ypedal = y[33:94]
+m = length(xpedal)
+s=rep(0,m)
+for (i in 1:(m-1)){s[i] = xpedal[i]*(ypedal[i+1] - ypedal[i])}
+A = sum(s) 
+A
+8*A #Output the result
+# [1] 12.87971 is the total area of the eight pedals
+#This result seems reasonable since it is about 1/3 of 
+#the total area of the square 6 X 6 = 36. 
+
+#Jingle Bells Music in R
+#by Keith McNulty in 2018
+#https://paulvanderlaken.com/2017/12/18/jingle-bells-in-r/
+
+if(!"dplyr" %in% installed.packages()) install.packages("dplyr")
+if(!"audio" %in% installed.packages()) install.packages("audio")
+
+library("dplyr")
+library("audio")
+
+notes <- c(A = 0, B = 2, C = 3, D = 5, E = 7, F = 8, G = 10)
+
+pitch <- paste("E E E",
+               "E E E",
+               "E G C D",
+               "E",
+               "F F F F",
+               "F E E E",
+               "E D D E",
+               "D G",
+               "E E E",
+               "E E E",
+               "E G C D",
+               "E",
+               "F F F F",
+               "F E E E E",
+               "G G F D",
+               "C",
+               "G3 E D C",
+               "G3",
+               "G3 G3 G3 E D C",
+               "A3",
+               "A3 F E D",
+               "B3",
+               "G G F D",
+               "E",
+               "G3 E D C",
+               "G3",
+               "G3 E D C",
+               "A3 A3",
+               "A3 F E D",
+               "G G G G A G F D",
+               "C C5 B A G F G",
+               "E E E G C D",
+               "E E E G C D",
+               "E F G A C E D F",
+               "E C D E F G A G",
+               "F F F F F F",
+               "F E E E E E",
+               "E D D D D E",
+               "D D E F G F E D",
+               "E E E G C D",
+               "E E E G C D",
+               "E F G A C E D F",
+               "E C D E F G A G",
+               "F F F F F F",
+               "F E E E E E",
+               "G C5 B A G F E D",
+               "C C E G C5")
+
+duration <- c(1, 1, 2,
+              1, 1, 2,
+              1, 1, 1.5, 0.5,
+              4,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              2, 2,
+              1, 1, 2,
+              1, 1, 2,
+              1, 1, 1.5, 0.5,
+              4,
+              1, 1, 1, 1,
+              1, 1, 1, 0.5, 0.5,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              3, .5, .5,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              3, 1,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              1, 0.5, 0.5, 0.5, 0.5, 1,
+              1, 0.33, 0.33, 0.33, 1, 0.33, 0.33, 0.33,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 0.33, 0.33, 0.33, 2)
+
+jbells <- data_frame(pitch = strsplit(pitch, " ")[[1]],
+                     duration = duration)
+
+jbells <- jbells %>%
+  mutate(octave = substring(pitch, nchar(pitch)) %>%
+           {suppressWarnings(as.numeric(.))} %>%
+           ifelse(is.na(.), 4, .),
+         note = notes[substr(pitch, 1, 1)],
+         note = note + grepl("#", pitch) -
+           grepl("b", pitch) + octave * 12 +
+           12 * (note < 3),
+         freq = 2 ^ ((note - 60) / 12) * 440)
+
+tempo <- 250
+
+sample_rate <- 44100
+
+make_sine <- function(freq, duration) {
+  wave <- sin(seq(0, duration / tempo * 60, 1 / sample_rate) *
+                freq * 2 * pi)
+  fade <- seq(0, 1, 50 / sample_rate)
+  wave * c(fade, rep(1, length(wave) - 2 * length(fade)), rev(fade))
+}
+
+jbells_wave <- mapply(make_sine, jbells$freq, jbells$duration) %>%
+  do.call("c", .)
+
+play(jbells_wave)
+
+#Ivanna's Jingle Bell
+#Jingle Bells Music in R
+#by Keith McNulty in 2018
+#https://paulvanderlaken.com/2017/12/18/jingle-bells-in-r/
+
+if(!"dplyr" %in% installed.packages()) install.packages("dplyr")
+if(!"audio" %in% installed.packages()) install.packages("audio")
+
+library("dplyr")
+library("audio")
+
+notes <- c(A = 0, B = 2, C = 3, D = 5, E = 7, F = 8, G = 10)
+
+pitch <- paste("C E C",
+               "E E E",
+               "E G C D",
+               "E",
+               "F F F F",
+               "F E E E",
+               "E D D E",
+               "D G",
+               "E E E",
+               "E E E",
+               "E G C D",
+               "E",
+               "F F F F",
+               "F E E E E",
+               "G G F D",
+               "C",
+               "G3 E D C",
+               "G3",
+               "G3 G3 G3 E D C",
+               "A3",
+               "A3 F E D",
+               "B3",
+               "G G F D",
+               "E",
+               "G3 E D C",
+               "G3",
+               "G3 E D C",
+               "A3 A3",
+               "A3 F E D",
+               "G G G G A G F D",
+               "C C5 B A G F G",
+               "E E E G C D",
+               "E E E G C D",
+               "E F G A C E D F",
+               "E C D E F G A G",
+               "F F F F F F",
+               "F E E E E E",
+               "E D D D D E",
+               "D D E F G F E D",
+               "E E E G C D",
+               "E E E G C D",
+               "E F G A C E D F",
+               "E C D E F G A G",
+               "F F F F F F",
+               "F E E E E E",
+               "G C5 B A G F E D",
+               "C C E G C5")
+
+duration <- c(1, 3, 2,
+              1, 3, 2,
+              1, 4, 1.5, 2.5,
+              4,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              2, 2,
+              1, 1, 2,
+              1, 1, 2,
+              1, 1, 1.5, 0.5,
+              4,
+              1, 1, 1, 1,
+              1, 1, 1, 0.5, 0.5,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              3, .5, .5,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              3, 1,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              1, 0.5, 0.5, 0.5, 0.5, 1,
+              1, 0.33, 0.33, 0.33, 1, 0.33, 0.33, 0.33,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 0.33, 0.33, 0.33, 2)
+
+jbells <- data_frame(pitch = strsplit(pitch, " ")[[1]],
+                     duration = duration)
+
+jbells <- jbells %>%
+  mutate(octave = substring(pitch, nchar(pitch)) %>%
+           {suppressWarnings(as.numeric(.))} %>%
+           ifelse(is.na(.), 4, .),
+         note = notes[substr(pitch, 1, 1)],
+         note = note + grepl("#", pitch) -
+           grepl("b", pitch) + octave * 12 +
+           12 * (note < 3),
+         freq = 2 ^ ((note - 60) / 12) * 440)
+
+tempo <- 250
+
+sample_rate <- 44100
+
+make_sine <- function(freq, duration) {
+  wave <- sin(seq(0, duration / tempo * 60, 1 / sample_rate) *
+                freq * 2 * pi)
+  fade <- seq(0, 1, 50 / sample_rate)
+  wave * c(fade, rep(1, length(wave) - 2 * length(fade)), rev(fade))
+}
+
+jbells_wave <- mapply(make_sine, jbells$freq, jbells$duration) %>%
+  do.call("c", .)
+
+play(jbells_wave)
+
+#
+#Revised Jingle Bell
+#
+#Jingle Bells Music in R
+#by Keith McNulty in 2018
+#https://paulvanderlaken.com/2017/12/18/jingle-bells-in-r/
+
+if(!"dplyr" %in% installed.packages()) install.packages("dplyr")
+if(!"audio" %in% installed.packages()) install.packages("audio")
+
+library("dplyr")
+library("audio")
+
+notes <- c(A = 0, B = 2, C = 3, D = 5, E = 7, F = 8, G = 10)
+
+pitch <- paste("F C F",
+               "G C G",
+               "G G C D",
+               "E",
+               "F F F F",
+               "G B B B",
+               "E D D E",
+               "D G",
+               "E E E",
+               "E E E",
+               "E G C D",
+               "E",
+               "F F F F",
+               "F E E E E",
+               "G G F D",
+               "C",
+               "G3 E D C",
+               "G3",
+               "G3 G3 G3 E D C",
+               "A3",
+               "A3 F E D",
+               "B3",
+               "G G F D",
+               "E",
+               "G3 E D C",
+               "G3",
+               "G3 E D C",
+               "A3 A3",
+               "A3 F E D",
+               "G G G G A G F D",
+               "C C5 B A G F G",
+               "E E E G C D",
+               "E E E G C D",
+               "E F G A C E D F",
+               "E C D E F G A G",
+               "F F F F F F",
+               "F E E E E E",
+               "E D D D D E",
+               "D D E F G F E D",
+               "E E E G C D",
+               "E E E G C D",
+               "E F G A C E D F",
+               "E C D E F G A G",
+               "F F F F F F",
+               "F E E E E E",
+               "G C5 B A G F E D",
+               "C C E G C5")
+
+duration <- c(1, 3, 2,
+              3, 1, 2,
+              1, 2, 1.5, 0.5,
+              4,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              1, 1, 3, 1,
+              2, 2,
+              1, 1, 2,
+              1, 1, 2,
+              1, 1, 1.5, 0.5,
+              4,
+              1, 1, 1, 1,
+              1, 1, 1, 0.5, 0.5,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              3, .5, .5,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              4,
+              1, 1, 1, 1,
+              3, 1,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              1, 1, 1, 1,
+              1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              1, 0.5, 0.5, 0.5, 0.5, 1,
+              1, 0.33, 0.33, 0.33, 1, 0.33, 0.33, 0.33,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              1, 1, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              1, 0.5, 0.5, 1, 0.5, 0.5,
+              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+              1, 0.33, 0.33, 0.33, 2)
+
+jbells <- data_frame(pitch = strsplit(pitch, " ")[[1]],
+                     duration = duration)
+
+jbells <- jbells %>%
+  mutate(octave = substring(pitch, nchar(pitch)) %>%
+           {suppressWarnings(as.numeric(.))} %>%
+           ifelse(is.na(.), 4, .),
+         note = notes[substr(pitch, 1, 1)],
+         note = note + grepl("#", pitch) -
+           grepl("b", pitch) + octave * 12 +
+           12 * (note < 3),
+         freq = 2 ^ ((note - 60) / 12) * 440)
+
+tempo <- 250
+
+sample_rate <- 44100
+
+make_sine <- function(freq, duration) {
+  wave <- sin(seq(0, duration / tempo * 60, 1 / sample_rate) *
+                freq * 2 * pi)
+  fade <- seq(0, 1, 50 / sample_rate)
+  wave * c(fade, rep(1, length(wave) - 2 * length(fade)), rev(fade))
+}
+
+jbells_wave <- mapply(make_sine, jbells$freq, jbells$duration) %>%
+  do.call("c", .)
+
+play(jbells_wave)
