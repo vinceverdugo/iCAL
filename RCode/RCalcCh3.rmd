@@ -1,6 +1,6 @@
 ##############################################################
 ######################## Chapter 3 ###########################
-#Fundamental theorem of calculus and approximation theory ####
+# Fundamental theorem of calculus and approximation theory ####
 ##############################################################
 # By Samuel S.P. Shen
 # Distinguished Professor of Mathematics and Statistics
