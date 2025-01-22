@@ -1,0 +1,765 @@
+##############################################################
+######################## Chapter 6 ###########################
+### Coordinates, Vectors, and Modeling a Curve  ##############
+##############################################################
+# By Samuel S.P. Shen
+# Distinguished Professor of Mathematics and Statistics
+# San Diego State University
+# https://shen.sdsu.edu
+# Email:sshen@sdsu.edu
+# Version 1.0 developed from May 2021 for Cal III
+
+setwd('/Users/sshen/Calculus')
+getwd()
+#
+#R code for plotting a blue point
+x1 = 2; x2 =3
+plot(x1, x2, pch =16, col = 'blue')
+
+x1 = c(2, 4, 3)
+x2 = c(3, 7, -4)
+plot(x1, x2, pch =16, col = 'blue',
+     xlim =c(0,10), ylim =c(-5,10))
+
+#
+#R code for plotting Fig. 6.2: Point moves on a circle
+setwd('/Users/sshen/CalculusR')
+getwd()
+
+setEPS()#Save the figure as fig0602.eps
+postscript("fig0602.eps", height = 5.4, width = 10)
+#png(file="fig0602.png",width=1000, height=540)
+# footprints of a point on a circle path
+par(mfrow=c(1,2))
+par(mar=c(4,4,2,0.2))
+R = 3
+R
+n = 41 #number of points
+ome = 2 #omega, ome
+t = seq(0, 3, len=n)
+x = R*cos(ome*t)
+y = R*sin(ome*t)
+#plot points on the circle 
+plot(x, y, pch = 16, cex = 0.7,
+     main = 'Footprints of a point moving along a circle',
+     cex.main = 0.8, cex.lab = 1.4, cex.axis = 1.4)
+#Plot the blue arrow with angle \theta
+arrows(0, 0, x[5], y[5], col = 'blue', 
+       length = 0.2, angle = 10)
+#Plot the angle \theta
+tangle = seq(0, 3/10, len=n)
+xangle = 0.25*R*cos(ome*tangle)
+yangle = 0.25*R*sin(ome*tangle)
+lines(xangle, yangle, 
+      col = 'blue', type = 'l', lwd = 0.9)
+#Plot other lines
+segments(0, 0, x[1], y[1], col = 'blue')
+segments(0, 0, 0, 3, col = 'blue')
+segments(x[5], 0, x[5], y[5], col = 'blue')
+segments(0, y[5], x[5], y[5], col = 'blue')
+points(x[5], y[5], col = 'blue',
+       pch = 16)
+text(x[5], -0.3, 'x',
+     cex = 1.3, col = 'blue')
+text( -0.3, y[5], 'y',
+      cex = 1.3, col = 'blue')
+text(x[5]/2, 0.3+y[5]/2, 'R',
+     cex = 1.3, col = 'blue')
+text(x[5]+0.3, y[5], 'P',
+     cex = 1.3, col = 'blue')
+text(-0.2, -0.2, 'O',
+     cex = 1.3, col = 'blue')
+text(1.5, 0.35, 
+     bquote(theta == omega*t),
+     cex = 1.3, col = 'blue')
+text(1.5, 0.35, 
+     bquote(theta == omega*t),
+     cex = 1.3, col = 'blue')
+text(0, -1, 
+     bquote(x == R*cos(omega*t)),
+     cex = 1.4, col = 'blue')
+text(0, -1.7, 
+     bquote(y == R*sin(omega*t)),
+     cex = 1.4, col = 'blue')
+
+# directions of a moving point on a circle 
+plot(x, y, pch = 16, cex = 0.7, cex.main = 0.8,
+     cex.lab = 1.4, cex.axis = 1.4,
+     main = 'Directions of a moving point on a circle')
+s = seq(length(x)-30)
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = 1:(length(s)-1),
+       angle = 30, length = 0.1)
+text(0, 1, 'Angular velocity = 2 radians/sec')
+text(0, 0, 'Time goes from 0 to 1.5 sec')
+text(0, -1, 'Angle goes from 0 to 3 radians')
+text(0, -2, 'Point goes through a semi-circle')
+dev.off() #end of the EPS plot environment
+
+#The coordinates of the first five points of Fig. 6.2
+t[1:2]
+#[1] 0.000 0.075 0.150 0.225 0.300 
+round(x[1:5], digits = 2)
+#[1] 3.000 2.966 2.866 2.701 2.476
+round(y[1:5], digits = 2)
+#[1] 0.000 0.448 0.887 1.305 1.694
+
+#
+#
+#R code: Plot Fig. 6.3: A point is spiraling out
+par(mar=c(4,4,2,0.6))
+n = 81
+ome = 2
+t = seq(0, 12, len=n)
+x = 2*t*cos(ome*t) 
+y = 2*t*sin(ome*t) 
+plot(x, y, pch = 16, cex = 0.7, 
+     cex.lab =1.3, cex.axis = 1.3,
+     main = 'A point is spiraling out')
+s = seq(length(x))
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = 1:(length(s)-1),
+       angle = 30, length = 0.1)
+
+
+#
+# Plot Fig. 6.4: Heart-shape path of a point
+par(mar=c(4,4,2,0.2))
+n = 41
+ome = 2
+t = seq(0, 2*pi-0.15, len=n)
+x = 2*sin(ome*t) + 5*sin(ome*t/2)
+y = 2*cos(ome*t) + 5*cos(ome*t/2)
+plot(x, y, pch = 16, cex = 0.7,
+     cex.lab =1.3, cex.axis = 1.3,
+     main = 'Heart-shape path of a point')
+s = seq(length(x))
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = 1:(length(s)-1),
+       angle = 30, length = 0.1)
+
+
+#
+# R plot Fig. 6.5: Model flower pedals 
+setwd('/Users/sshen/CalculusR')
+setEPS()
+postscript("fig0605.eps", height = 5.4, width = 10)
+par(mfrow=c(1,2))
+par(mar=c(4,4,2,0.2))
+# eight petals 
+a = 3
+n = 1000
+ome = 2
+t = seq(0, 2*pi, len=n)
+theta = ome*t
+r = a*cos(4*theta)
+x = r*cos(theta)
+y = r*sin(theta)
+plot(x, y,  type = 'l', lwd = 4, col = 'pink',
+     main = 'An eight-petal rose')
+
+# infinitely many petals
+n = 10000
+ome = 2
+t = seq(0, 40*pi, len=n)
+theta = ome*t
+a = sqrt(2)
+r = a*cos(pi*theta)
+x = r*cos(theta)
+y = r*sin(theta)
+plot(x, y,  type = 'l', lwd = 1, col = 'red',
+     main = 'Infinitely many petals')
+dev.off()
+
+#Infinitely many petals with different color
+n = 10000
+ome = 2
+t = seq(0, 40*pi, len=n)
+theta = ome*t
+a = sqrt(2)
+r = a*cos(pi*theta)
+x = r*cos(theta)
+y = r*sin(theta)
+plot(x, y,  type = 'l', lwd = 1, col = 'red',
+     xlab ='', ylab = '',
+     xaxt = 'n', yaxt = 'n',
+     main = '')
+points(x, y, col = sqrt(1:n), pch = 2, cex = 0.3)
+
+#Hypotrochoid
+n = 401
+t = seq(0, 6*pi, len=n)
+x = 2*cos(t) + 5*cos(2*t/3)
+y = 2*sin(t) - 5*sin(2*t/3)
+plot(x, y,  type = 'l', lwd = 1, col = 'red',
+     main = 'Hypotrochoid')
+s = seq(length(x))
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = 1:(length(s)-1),
+       angle = 30, length = 0.1)
+
+
+#Epicycloid
+n = 401
+t = seq(0, 2*pi, len=n)
+x = 4*cos(t) - cos(4*t)
+y = 4*sin(t) - sin(4*t)
+plot(x, y,  type = 'l', lwd = 1, col = 'red',
+     main = 'Hypotrochoid')
+s = seq(length(x))
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = 1:(length(s)-1),
+       angle = 30, length = 0.1)
+
+
+#Star-curve
+n = 401
+t = seq(0, 2*pi, len=n)
+x = 4*cos(t)^3 
+y = 4*sin(t)^3
+plot(x, y,  type = 'l', lwd = 1, col = 'red',
+     main = 'Hypotrochoid')
+s = seq(length(x))
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = 1:(length(s)-1),
+       angle = 30, length = 0.1)
+
+#Coin money 2
+n = 28001
+t = seq(0, 110*pi, len=n)
+x = 4*(sin(pi*t) + cos(t)^3)
+y = 4*(cos(pi*t) + sin(t)^3)
+plot(0,0,  type = 'l', lwd = 1,
+     xlim = c(-8, 8), ylim = c(-8, 8),
+     xlab ='', ylab = '',
+     xaxt = 'n', yaxt = 'n',
+     main = '')
+s = seq(length(x))
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = sqrt(1:(length(s)-1)),
+       angle = 30, length = 0.2)
+
+#Coin money 2
+n = 28001
+t = seq(0, 110*pi, len=n)
+x = 4*(sin(pi*t) + cos(t)^3)
+y = 4*(cos(pi*t) + sin(t)^3)
+plot(0,0,  type = 'l', lwd = 1,
+     xlim = c(-8, 8), ylim = c(-8, 8),
+     xlab ='', ylab = '',
+     xaxt = 'n', yaxt = 'n',
+     main = '')
+s = seq(length(x))
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = 1:(length(s)-1),
+       angle = 30, length = 0.15)
+
+#n = 4001
+t = seq(0, 110*pi, len=n)
+x = 4*(sin(pi*t) + cos(t)^3)
+y = 4*(cos(pi*t) + sin(t)^3)
+plot(x, y,  type = 'l', lwd = 1, 
+     main = 'Coin')
+points(x, y, col = 1:n, pch = 3, cex = 0.4)
+
+
+#Descarte leaf
+t = seq(-10, 10, len = 202)
+a = 5
+x = 3*a*t/(1+t^3)
+y = 3*a*t^2/(1+t^3)
+plot(x, y, type = 'l', col = 'blue',
+     xlim = c(-10, 10), 
+     ylim = c(-20, 10))
+grid()
+arrows(0, -20, 0, 10, 
+       length = 0.2, angle = 8)
+arrows(-10, 0, 10, 0, 
+       length = 0.2, angle = 8)
+s = seq(length(x))
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = 1:(length(s)-1),
+       angle = 30, length = 0.1)
+
+#
+#
+# R plot Fig. 6.7: Vector OP
+plot(3,4, pch = 16, col = 'red', cex = 2,
+     xlim = c(-1, 5), ylim = c(-1, 5), bty = 'n',
+     xlab ='', ylab = '', xaxt ='n', yaxt = 'n')
+arrows(0, 0, 3, 4, lwd=3, angle = 6,
+       length = 0.6)
+arrows(-1, 0, 4, 0, angle = 5)
+arrows(0, -1, 0, 5, angle = 5)
+arrows(0, 0, 0, 1, lwd = 4, angle = 9, length = 0.15)
+arrows(0, 0, 1, 0, lwd = 4, angle = 9, length = 0.15)
+segments(3, 0, 3, 4, lty = 3)
+segments(0, 4, 3, 4, lty = 3)
+text(-0.2, -0.2, 'O', cex = 1.3)
+text(3.2, 4.4, col = 'red', cex = 1.2,
+     expression(P(x[1], x[2])))
+text(0.5, 0.3, expression(theta), cex = 1.3)
+text(1, -0.3, 'i', cex = 1.3, font = 2)
+text(-0.3, 1, 'j', cex = 1.3, font = 2)
+text(3.8, -0.3, 'x', cex = 1.2)
+text(-0.2, 4.8, 'y', cex = 1.2)
+
+#
+#
+# R command of entering data
+x = c(1.4, -2.6, 0.9, -3.7, 4.1, 3.2, 5.0)
+x
+#[1]  1.4 -2.6  0.9 -3.7  4.1  3.2  5.0
+
+#
+#
+#An R code for vector addition and subtraction
+u = c(3, 4)
+v = c(-2.5,1.5)
+x = u + v
+y = u - v
+x
+#[1] 0.5 5.5
+y
+#[1] 5.5 2.5
+
+#
+#
+
+#
+#
+# R plot Fig. 6.8: Addition and subtraction of two vectors
+u = c(3, 4)
+v = c(-2.5,1.5)
+o = c(0, 0)
+x = u + v
+y = u - v
+plot(0,0, pch = 16, cex = 0.4,
+     xlab = '', ylab = '', 
+     xlim =c(-3,6), ylim = c(-3,6))
+grid()
+arrows(o[1],o[2], u[1],u[2], angle =10)
+arrows(o[1],o[2], v[1],v[2], angle =10, col = 'blue')
+arrows(o[1],o[2], -v[1],-v[2], 
+       lty = 2, angle =10, col = 'blue')
+arrows(o[1],o[2], x[1],x[2], angle =10, col = 'red')
+arrows(o[1],o[2], y[1],y[2], angle =10, col = 'purple')
+segments(u[1],u[2], x[1],x[2], lty = 3, col = 'blue')
+segments(v[1],v[2], x[1],x[2], lty = 3)
+segments(y[1],y[2], u[1],u[2], lty = 2, col = 'blue')
+segments(-v[1], -v[2], y[1],y[2], lty = 2, col = 'blue')
+arrows(-3, 0, 6,0, angle = 6)
+arrows(0, -3, 0, 6, angle = 6)
+text(u[1]+ 0.3, u[2] + 0.3, 'u', font=2)
+text(v[1]- 0.3, v[2] + 0.3, 'v', col = 'blue', font=2)
+text(-v[1], -v[2] - 0.3, '-v', col = 'blue', font=2)
+text(x[1]+0.2, x[2] + 0.3, 'u + v', col = 'red', font=2)
+text(y[1]+0.3, y[2] - 0.3, 'u - v', col = 'purple', font=2)
+text(-0.3, - 0.3, 'O', cex = 1.2)
+text(6, - 0.3, 'x', cex = 1.2)
+text(- 0.4, 6,  'y', cex = 1.2)
+
+#
+#
+#2 dim vector u = (3, 4)
+#3-dim vector v = (2, 5, -1)
+#n-dim vector w = (2, 4, 2, 1, ..., 6), n components
+
+# R plot Fig. 6.10: Colorado temperature and elevation
+x= c(1671.5, 1635.6, 2097.0, 1295.4, 1822.7, 2396.9, 2763.0, 1284.7,
+     1525.2, 1328.6, 1378.9, 2323.8, 2757.8, 1033.3, 1105.5, 1185.7,
+     2343.9, 1764.5, 1271.0, 2347.3, 2094.0, 2643.2, 1837.9, 1121.7)
+#x is elevation data
+y= c(22.064, 23.591, 18.464, 23.995, 20.645, 17.175, 13.582, 24.635,
+     22.178, 24.002, 23.952, 16.613, 13.588, 25.645, 25.625, 25.828,
+     17.626, 22.433, 24.539, 17.364, 17.327, 15.413, 22.174, 24.549)
+y
+length(y)
+
+cor(x,y)
+#[1] -0.9813858
+mean(x)
+#[1] 1792.879
+mean(y)
+#[1] 20.95863
+var(x)
+var(y)
+sd(y)
+#var = sd^2
+
+cbind(x,y)
+
+par(mar=c(4.5,4.5,2.5,0.5))
+plot(x,y, 
+     xlab="Elevation [m]",
+     ylab="Temperature [deg C]",
+     main="Colorado Elevation and July Tmean: 1981-2010 Average",
+     cex.lab=1.5, cex.axis=1.5)
+reg = lm(y ~ x) #lm means linear model
+reg # y = a + b x
+#(Intercept)            x  
+# 33.476216    -0.006982   #-7.0 degC/1km
+summary(reg)
+#R-squared:  0.9631
+abline(reg, lwd=3, col = 'red')
+text(2100, 25.5, "Temperature lapse rate: 7.0 deg C/1.0km", 
+     cex=1.5)
+text(2350, 24, "y= 33.48 - 0.0070 x", cex=1.5)
+text(2350, 22.5,"R-squared = 0.96", cex=1.5)
+
+#
+#R plot Fig. 6.12: Polar expression of a complex number z
+setwd("~/calculus")
+setEPS()
+postscript("fig0612.eps", height=7, width=7)
+par(mar = c(0,0,0,0))
+r=10
+bb=1.5*r
+t=seq(0, 2*pi, length=200)
+x=r*cos(t)
+y=r*sin(t)
+plot(x,y,type="l", lwd=3, asp=1, 
+     xlim=c(-bb + 3, bb + 3),ylim=c(-bb + 5, bb + 3),
+     xaxt="n",yaxt="n",ann=FALSE,bty="n")
+aa=2*r
+x1=r*cos(pi/3)
+y1=r*sin(pi/3)
+arrows(c(-aa+8, 0), c(0, -aa+8), c(aa-3,0), c(0, aa-2), 
+       length=0.1, code=2, lwd=1)
+arrows(0,0,0.98*x1,0.98*y1, col= 'blue',
+       length=0.15,code=2, lwd=2, angle=15)
+t2=seq(0,pi/3,length=10)
+x2=0.22*r*cos(t2)
+y2=0.22*r*sin(t2)
+lines(x2,y2, type="l", col = 'blue')
+points(x1,y1, pch=19, cex= 1.5, col = 'blue')
+segments(x1,0, x1,y1, col = 'blue', lwd = 2)
+segments(x1,0, 0,0, col = 'blue', lwd = 2)
+text(1.1*r,0.1*r, "r", cex=1.3)
+text(-0.1*r, 1.1*r, "i r", cex=1.5)
+text(1.2*x1,1.13*y1, "(x,y)", cex=1.3)
+text(0.3*r,-0.1*r, expression(paste('r', cos,theta)), 
+     cex=1.3, col = 'blue')
+text(1.2*x1, 0.5*y1, expression(paste('r', sin,theta)), 
+     cex=1.3, col = 'blue', srt = 270)
+text(0.37*x1, 0.5*y1, "r", 
+     cex=1.3, col = 'blue')
+text(1.55*r,-0.1*r, "Real Axis", cex=1.3)
+text(0.1*r, 1.5*r, "Imaginary Axis", cex=1.3, srt=270)
+text(-0.1*r, -0.1*r, "0", cex=1.5)
+text(0.3*r*cos(pi/6),0.3*r*sin(pi/6), 
+     expression(paste(theta)), 
+     cex=1.3, col = 'blue')
+text(1.85 * x1, 1.95 * y1, 
+     expression(paste(x, " = r", cos, theta, ", ", y, 
+                      " = r", sin, theta)), cex=1.5)
+text(1.4*x1,1.75*y1, 
+     expression(z == x + i * y), cex=1.5)
+text(1.3*x1,1.55*y1, 
+     expression(paste('z = r', e^{i*theta})), cex=1.5)
+text(1.74*x1,1.35*y1, 
+     expression(paste(e^{i*theta},"= ", 
+                      "r cos",theta,"+ i r sin",theta)), 
+     cex=1.5)
+dev.off()
+
+#Cross product and dot product
+# R Program illustrating 
+# cross product of two vectors 
+# Import the required library 
+#install.packages('pracma')
+library(pracma) 
+# Taking two vectors 
+a = c(3, 5, 4) 
+b = c(2, 7, 5) 
+# Calculating cross product using cross() 
+cross(a, b)
+dot(a,b)
+
+t = c(1,1)
+norm(t, '2')
+#
+#
+# R plot Fig. 6.13: Circular motion of a point
+ome = 1
+R = 3
+t = seq(0, 4*pi, len = 81)
+x = R*cos(ome*t)
+y = R*sin(ome*t)
+par(mar = c(2,2,2,0.2))
+plot(x, y, type = 'l', 
+     xlim = c(-4,4), ylim = c(-4,4),
+     xlab = '', ylab = '', cex.axis = 1.1,
+     main = 'Circular motion of a point')
+arrows(-3.5, 0, 3.8, 0, angle = 9)
+arrows(0, -3.5, 0, 3.8, angle = 9)
+s = seq(length(x)-10)
+arrows(x[s], y[s], x[s+1], y[s+1], 
+       col = 1:(length(s)-1),
+       angle = 30, length = 0.1)
+points(x[15], y[15], pch =16, cex = 2, col = 'red') 
+arrows(0,0, x[15], y[15], lwd = 1.5,
+       angle = 20, len = 0.2, col = 'red')
+arrows(x[15], y[15], 0.7*x[15], 0.7*y[15], 
+       lwd = 6, length = 0.1)
+arrows(x[15], y[15], 0.3*x[15], 0.3*y[15], 
+       lwd = 2, length = 0.1, col = 'blue')
+text(-0.4, -0.3, 'O', cex = 1.5)
+text(x[15] - 0.3, y[15] + 0.3, 'r', 
+     font = 2, col = 'red', cex = 1.5)
+text(0.7*x[15]-0.1, 0.7*y[15] - 0.3, 'a', 
+     font = 2, col = 'black', cex = 1.5)
+text(0.3*x[15]-0.1, 0.3*y[15] - 0.3, 'F', 
+     font = 2, col = 'blue', cex = 1.5)
+text(3.6, -0.3, 'x', cex = 1.3)
+text(-0.3, 3.6, 'y', cex = 1.3)
+
+x = expression(2*t*cos(2*t),'t')
+x
+D(x,'t')
+
+#Symbolic calculation of derivatives 
+#Example 6.4
+x = expression(2*t*cos(2*t),'t')
+x
+y = expression(2*t*sin(2*t),'t')
+y
+D(x,'t')
+#2 * cos(2 * t) - 2 * t * (sin(2 * t) * 2)
+D(y,'t')
+#2 * sin(2 * t) + 2 * t * (cos(2 * t) * 2)
+
+#Example 6.5
+x = expression(R*cos(ome*t),'t')
+y = expression(R*sin(ome*t),'t')
+D(x,'t')
+#-(R * (sin(ome * t) * ome))
+D(y,'t')
+#R * (cos(ome * t) * ome)
+
+x = c(1,4,6)
+y = c(-2, 3.8, 1.0)
+plot(x,y)
+reg = lm(y ~ x)
+abline(reg, col= 'red')
+
+sd(x)
+var(x)
+#
+# R plot Fig. 6.15: tangent line of a curve
+ome = 2*pi
+R = 3
+t = seq(0, 1, len = 101)
+t
+x = R*cos(ome*t)
+x
+y = R*sin(ome*t)
+y
+par(mar = c(2,2,2,0.2))
+plot(x,y, pch = 16, type = 'o')
+plot(x, y, type = 'l', 
+     xlim = c(-4,4), ylim = c(-4,4),
+     xlab = '', ylab = '', cex.axis = 1.1)
+arrows(-3.5, 0, 3.8, 0, angle = 9)
+arrows(0, -3.5, 0, 3.8, angle = 9)
+points(3*sqrt(2)/2, 3*sqrt(2)/2, 
+       pch =16, col = 'red', cex = 0.5)
+ tau = seq(-1,1, len =11)
+tau
+xt = 3*sqrt(2)/2 * (1 - tau)
+xt
+yt = 3*sqrt(2)/2 * (1 + tau)
+yt
+plot(xt,yt)
+
+tau = seq(-1,1, len =11)
+tau
+xt = 3*sqrt(2)/2  - (3*sqrt(2)/2)*(tau - 1/8)
+xt
+yt = 3*sqrt(2)/2  + (3*sqrt(2)/2)* (tau - 1/8)
+yt
+plot(xt,yt)
+
+
+ome = 2*pi
+R = 3
+t = seq(0, 1, len = 101)
+t
+x = R*cos(ome*t)
+x
+y = R*sin(ome*t)
+y
+par(mar = c(2,2,2,0.2))
+plot(x,y, pch = 16, type = 'o')
+plot(x, y, type = 'l', 
+     xlim = c(-4,4), ylim = c(-4,4),
+     xlab = '', ylab = '', cex.axis = 1.1)
+arrows(-3.5, 0, 3.8, 0, angle = 9)
+arrows(0, -3.5, 0, 3.8, angle = 9)
+points(3*sqrt(2)/2, 3*sqrt(2)/2, 
+       pch =16, col = 'red', cex = 0.5)
+tau = seq(-1,1, len =11)  
+
+tau
+xt = 3*sqrt(2)/2 * (1 - tau)
+xt
+yt = 3*sqrt(2)/2 * (1 + tau)
+yt
+points(xt, yt, pch = 16, type = 'l', col = 'blue')
+text(-0.4, -0.3, 'O', cex = 1.5)
+text(3.6, -0.3, 'x', cex = 1.3)
+text(-0.3, 3.6, 'y', cex = 1.3)
+
+#
+#
+# R plot Fig. 6.16: Helix and its tangent line
+#install.packages("plot3D")
+library("plot3D")
+R = 3
+ome = 2*pi
+c=1
+t = seq(0, 3.11, len = 1000)
+x = R*cos(ome*t)
+y = R*sin(ome*t)
+z = c*t
+t0 = 1.863
+tau = seq(-0.15, 0.15, len =300)
+xt = R*cos(ome*t0) - R*ome*sin(ome*t0)*tau
+yt = R*sin(ome*t0) + R*ome*cos(ome*t0)*tau
+zt = c*t0 + c*tau
+par(mar = c(1,2,0.4,0.0))
+scatter3D(c(x,xt), c(y,yt), c(z,zt), pch ='-', 
+          cex =0.6, col = 'blue', colvar = NULL,
+          ticktype = "detailed",
+          xlim =c(-3,3), ylim =c(-3,3), zlim=c(0,3))
+
+#Another way
+#install.packages('lattice')
+library(lattice)
+R = 3
+ome = 2*pi
+c = 1
+t<-seq(0, 6*pi, length.out=100)
+cloud(z~x+y,data.frame(x=R*cos(t),y=R*sin(t), z=c*t),
+      type="l", col = 'purple')
+#
+#
+library(lattice)
+R = 3
+ome = 2*pi
+c = 2
+t<-seq(0, 3, length.out=1000)
+cloud(z~x+y,data.frame(x=R*cos(ome*t),y=R*sin(ome*t), z=c*t),
+      type="l", col = 'purple')
+
+3*sqrt(36*pi^2 + 1)
+#[1] 56.62819
+
+#Plot Fig. 6.17(a) for k = pi
+par(mar=c(0,0,0,0))
+n = 10000
+a = 3
+ome = 2
+k = pi
+t = seq(0, 30*pi , len=n)
+theta = ome*t
+r = a*cos(k* theta )
+x = r*cos( theta )
+y = r*sin( theta )
+plot (x, y, type = 'l', lwd = 1, col = 'red ',
+      frame.plot=FALSE,
+      xaxt = 'n', yaxt = 'n',
+      xlab = '', ylab= '')
+s = 1:(n+1)
+arrows (x[s], y[s], x[s+1], y[s+1],
+        col = 1:( length (s)-1),
+        angle = 30, length = 0.14)
+
+#Plot Fig. 6.17b for k = sqrt(2)
+#The same as above by a different k
+
+
+#Plot 6.17(a): Artistic hypotrochoid patterns
+par(mar=c(0,0,0,0))
+n = 6000
+R = 100
+r = 2/3
+p = 70
+ome = 1
+t = seq(0, 30*pi , len=n)
+theta = ome*t
+x = (R - r)*cos( theta ) + p*cos((R - r)*theta/r)
+y = (R - r)*sin( theta ) - p*sin((R - r)*theta/r)
+plot (x, y, type = 'l', lwd = 1, col = 'pink',
+      frame.plot=FALSE,
+      xaxt = 'n', yaxt = 'n',
+      xlab = '', ylab= '')
+s = 1:(n-1)
+arrows (x[s], y[s], x[s+1], y[s+1],
+        col = 1:length(s),
+        angle = 30, length = 0.14)
+
+#
+#
+#Compute the length of the curve
+n = 401
+
+t = seq(0, 1, len = n)
+t
+x = 2*cos(2*pi*t)
+x
+dx = x[5] - x[4]
+dx
+y = 2*sin(2*pi*t)
+y
+
+L = 0
+for(i in 1:(n-1)){
+  L = L + sqrt((x[i+1] - x[i])^2 + (y[i+1] - y[i])^2)
+}
+L
+
+2*pi*2
+x[n]
+n
+
+length(x)
+x[n+1]
+
+#Plot 6.17(b) artistic patterns
+par(mar=c(0,0,0,0))
+n = 10000
+R = 22
+r = 10*2/3
+p = -9
+ome = sqrt(5)
+t = seq(0, 190*pi , len=n)
+theta = ome*t
+x = (R - r)*cos( theta ) + p*cos((R - r)*theta/r)
+y = (R - r)*sin( theta ) - p*sin((R - r)*theta/r)
+plot (x, y, type = 'l', lwd = 1, col = 'red',
+      frame.plot=FALSE,
+      xaxt = 'n', yaxt = 'n',
+      xlab = '', ylab= '')
+s = 1:(n+1)
+arrows (x[s], y[s], x[s+1], y[s+1],
+        col = 1:( length(s)-1),
+        angle = 30, length = 0.14)
+
+
+#Curvature
+x = seq(-3, 3, len = 100)
+y = x^2
+plot(x, y, type = 'l')
+
+kappa = 2/(1 + 4*x^2)^(3/2)
+plot(x, kappa, type = 'l', col = 'red')
+
+
+#
+t = seq(0, 2*pi, len = 200)
+x = cos(t); y = sin(2*t)
+plot(x, y, type = 'l')
+
+t = seq(-50, 50, len = 200)
+plot(t^2, t^3, type = 'l')
