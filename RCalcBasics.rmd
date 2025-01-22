@@ -1,7 +1,7 @@
 ######################################################
 ###############   R Code for the Book  ###############
 # Modern Calculus with R: Ideas, Methods and Computing
-# By Samuel S.P. Shen
+# By Samuel S.P. Shen 
 # Distinguished Professor of Mathematics and Statistics
 # San Diego State University
 # https://shen.sdsu.edu
