@@ -1,6 +1,6 @@
 ##############################################################
 ######################## Chapter 9 ###########################
-##########     Integral in n-dimensional Space ##############
+#############  Integral in n-dimensional Space ###############
 ##############################################################
 # By Samuel S.P. Shen
 # Distinguished Professor of Mathematics and Statistics
